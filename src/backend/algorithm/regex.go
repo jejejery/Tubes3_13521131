@@ -3,13 +3,13 @@ package algorithm
 import "regexp"
 
 func isMathOperation(pattern string) bool {
-	operation := `^(\d+)\s*([\-\+\*\/])\s*(\d+)(\s*([\-\+\*\/])\s*(\d+)){1,}\?$`
+	operation := `^(\d+)\s*([\-\+\*\/])\s*(\d+)(\s*([\-\+\*\/])\s*(\d+)){0,}\?*$`
 	regex := regexp.MustCompile(operation)
 	return regex.MatchString(pattern)
 }
 
 func isDate(pattern string) bool {
-	regex := regexp.MustCompile(`^\d{2}/\d{2}/\d{4}$`)
+	regex := regexp.MustCompile(`^([Hh][aA][rR][iI] [aA][Pp][Aa]\s*)?\d{2}/\d{2}/\d{4}.*$`)
 	return regex.MatchString(pattern)
 }
 
