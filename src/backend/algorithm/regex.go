@@ -3,7 +3,8 @@ package algorithm
 import "regexp"
 
 func isMathOperation(pattern string) bool {
-	regex := regexp.MustCompile(`^(\d+)\s*([\-\+\*\/])\s*(\d+)\?$`)
+	operation := `^(\d+)\s*([\-\+\*\/])\s*(\d+)(\s*([\-\+\*\/])\s*(\d+)){1,}\?$`
+	regex := regexp.MustCompile(operation)
 	return regex.MatchString(pattern)
 }
 
