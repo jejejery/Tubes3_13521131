@@ -3,7 +3,7 @@ package algorithm
 import "regexp"
 
 func isMathOperation(pattern string) bool {
-	regex := regexp.MustCompile(`^\s*\d+(\s*[-+*/]\s*\d+)+\s*$`)
+	regex := regexp.MustCompile(`^(\d+)\s*([\-\+\*\/])\s*(\d+)\?$`)
 	return regex.MatchString(pattern)
 }
 
@@ -13,17 +13,17 @@ func isDate(pattern string) bool {
 }
 
 func isAddingQNAToDatabase(pattern string) bool {
-	regex := regexp.MustCompile(`[tT][aA][mM][bB][aA][hH][kK][aA][nN]$`)
+	regex := regexp.MustCompile(`[tT][aA][mM][bB][aA][hH][kK][aA][nN].*$`)
 	return regex.MatchString(pattern)
 }
 	
 func isErasingQuestion(pattern string) bool {
-	regex := regexp.MustCompile(`[hH][aA][pP][uS]`)
+	regex := regexp.MustCompile(`[hH][aA][pP][uS].*$`)
 	return regex.MatchString(pattern)
 }
 
 func checkQuestion(input string) string {
-	var ans string
+	var ans string = ""
 	if isMathOperation(input) {
 		ans = "mathoperation"
 	} 
