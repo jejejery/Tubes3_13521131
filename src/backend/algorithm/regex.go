@@ -12,17 +12,26 @@ func isDate(pattern string) bool {
 	return regex.MatchString(pattern)
 }
 
-// func isQuestionInDataBase(pattern string) bool {
-// 	regex := regex.MustCompile(//regex expression for question that is stored in database*/)
-// 	return regex.MatchString(pattern)
-// }
-
-// func isAddingQNAToDatabase(pattern string) bool {
-	// 	regex := regex.MustCompile(//regex expression for tambah pertanyaan)
-	// 	return regex.MatchString(pattern)
-	// }
+func isAddingQNAToDatabase(pattern string) bool {
+	regex := regexp.MustCompile(`[tT][aA][mM][bB][aA][hH][kK][aA][nN]$`)
+	return regex.MatchString(pattern)
+}
 	
-// func isErasingQuestion(pattern string) bool {
-	// 	regex := regex.MustCompile(//regex expression for menghapus pertanyaan)
-	// 	return regex.MatchString(pattern)
-// }
+func isErasingQuestion(pattern string) bool {
+	regex := regexp.MustCompile(`[hH][aA][pP][uS]`)
+	return regex.MatchString(pattern)
+}
+
+func checkQuestion(input string) string {
+	var ans string
+	if isMathOperation(input) {
+		ans = "mathoperation"
+	} else if isDate(input) {
+		ans = "date"
+	} else if isAddingQNAToDatabase(input) {
+		ans = "adding"
+	} else if isErasingQuestion(input) {
+		ans = "erasing"
+	}
+	return ans
+}
