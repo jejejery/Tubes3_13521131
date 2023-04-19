@@ -26,11 +26,14 @@ func checkQuestion(input string) string {
 	var ans string
 	if isMathOperation(input) {
 		ans = "mathoperation"
-	} else if isDate(input) {
+	} 
+	if isDate(input) {
 		ans = "date"
-	} else if isAddingQNAToDatabase(input) {
+	} 
+	if isAddingQNAToDatabase(input) {
 		ans = "adding"
-	} else if isErasingQuestion(input) {
+	} 
+	if isErasingQuestion(input) {
 		ans = "erasing"
 	}
 	return ans
