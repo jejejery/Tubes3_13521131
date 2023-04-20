@@ -20,25 +20,22 @@ class MainGPT extends React.Component {
 
     render() { 
       return (
+      <div className={styles.main}>
         <div style={{ display: 'flex', flex: '1 auto', justifyContent: 'center', position: 'relative' }}>
-        <SideBar style={{ margin: '0 10px' }} />
-        
-        <div style={{ margin: '0 10px', flex: 1, position: 'relative' }}>
-    
-          
-   
-    
-      <Form.Control
-        type="text"
-        placeholder="Send a message..."
-        onChange={this.handleReadText}
-        style={{ fontSize: '24px', position: 'absolute', bottom: '2%', margin: '0 10px', marginLeft: 'auto' }}
-      />
-  </div>
-</div>
-        
-
-        
+          <SideBar style={{ margin: '0 10px' }} />
+          <div className={styles.chatbox}>
+            <h1>to be continued...</h1>
+          </div>
+          <div style={{ margin: '0 10px', flex: 1, position: 'relative' }}>
+            <Form.Control
+            type="text"
+            placeholder="Send a message..."
+            onChange={this.handleReadText}
+            style={{ fontSize: '24px', position: 'absolute', bottom: '2%', margin: '0 10px', marginLeft: 'auto' }}
+            />
+         </div>
+       </div>
+      </div>
             );
      }
 }

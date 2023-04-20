@@ -1,0 +1,87 @@
+
+body{
+    background-color: #B2A4FF;
+}
+.head{
+    margin: 20px 10%;
+    height: 70px;
+    flex: 1;
+    position: relative;
+}
+
+.head > div:first-child{
+    position: relative;
+    color: #FFDEB4;
+    font-family: OUTFIT;
+    font-size: 40px;
+    font-weight: 900; 
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.head > div:first-child > span{
+    margin-right: 15px;
+    display: flex;
+
+  }
+
+.head > div:first-child > span > a {
+    margin-right: inherit;
+    color: inherit;
+    font-family: inherit;
+    text-decoration: none;
+    position: absolute;
+    right: 0%;
+    top: 0%;
+  }
+
+.intro{
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    left: 5%;
+    right: 5%;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.intro > div:first-child{
+    position: absolute;
+    top: 5%;
+    bottom: 5%;
+    left: 2%;
+    right: 45%;
+
+}
+
+.intro > div:first-child > span{
+    color: #FDF7C3;
+    text-shadow: 1px 1px 1px #000;
+    -webkit-text-stroke: 1px #FFFFFF;
+    font-size: 90px;
+    font-weight: bold;
+    font-family: OUTFIT; 
+
+}
+
+.intro > div:first-child > p{
+    margin-top: 120px;
+    color: #FDF7C3;
+    font-size: 33px;
+    font-weight: 500;
+    font-family: 'Outfit'; 
+}
+
+.intro > img{
+    position: absolute;
+    right: 10%;
+    bottom: 10%;
+    transform: scale(1.1);
+}
+
+.button{
+    position: absolute;
+    right: 50%;
+    bottom: 8%;
+    transform: scale(1.7);
+}
