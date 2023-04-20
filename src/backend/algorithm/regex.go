@@ -16,8 +16,7 @@ func isDate(pattern string) bool {
 }
 
 func isAddingQNAToDatabase(pattern string) bool {
-	regex := regexp.MustCompile(`[tT][aA][mM][bB][aA][hH][kK][aA][nN]\s*[pP][eE][Rr][tT][aA][nN][yY][aA][aA][nN]\s*.*
-	[dD][eE][nN][gG][aA][nN]\s*[jJ][aA][wW][aA][bB][aA][nN]\s*.*$`)
+	regex := regexp.MustCompile(`[tT][aA][mM][bB][aA][hH][kK][aA][nN]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*\s*[dD][eE][nN][gG][aA][nN]\s*[jJ][aA][wW][aA][bB][aA][nN]\s*.*\s*.*`)
 	return regex.MatchString(pattern)
 }
 	
