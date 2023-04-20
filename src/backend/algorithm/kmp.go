@@ -1,5 +1,9 @@
 package algorithm
 
+import (
+	"strings"
+)
+
 func KMPMatch(text string, pattern string) (int, float32) {
 	n := len(text)
 	m := len(pattern)
@@ -7,6 +11,9 @@ func KMPMatch(text string, pattern string) (int, float32) {
 	b := calculateBorder(pattern)
 	i := 0
 	j := 0
+
+	text = strings.ToLower(text)
+	pattern = strings.ToLower(pattern)
 
 	for i < n {
 		if (pattern[j] == text[i]) {

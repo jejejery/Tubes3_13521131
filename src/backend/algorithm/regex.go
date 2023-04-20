@@ -9,17 +9,18 @@ func isMathOperation(pattern string) bool {
 }
 
 func isDate(pattern string) bool {
-	regex := regexp.MustCompile(`^([Hh][aA][rR][iI] [aA][Pp][Aa]\s*)?\d{2}/\d{2}/\d{4}.*$`)
+	regex := regexp.MustCompile(`^([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}/\d{2}/\d{4}.*$`)
 	return regex.MatchString(pattern)
 }
 
 func isAddingQNAToDatabase(pattern string) bool {
-	regex := regexp.MustCompile(`[tT][aA][mM][bB][aA][hH][kK][aA][nN].*$`)
+	regex := regexp.MustCompile(`[tT][aA][mM][bB][aA][hH][kK][aA][nN]\s*[pP][eE][Rr][tT][aA][nN][yY][aA][aA][nN]\s*.*
+	[dD][eE][nN][gG][aA][nN]\s*[jJ][aA][wW][aA][bB][aA][nN]\s*.*$`)
 	return regex.MatchString(pattern)
 }
 	
 func isErasingQuestion(pattern string) bool {
-	regex := regexp.MustCompile(`[hH][aA][pP][uS].*$`)
+	regex := regexp.MustCompile(`[hH][aA][pP][uU][sS]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*$`)
 	return regex.MatchString(pattern)
 }
 
