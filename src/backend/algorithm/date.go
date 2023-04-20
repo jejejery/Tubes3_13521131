@@ -5,10 +5,10 @@ import (
 	"math"
 ) 
 
-func calculateDate(date []string) string {
-	dayStr := date[1]
-	monthStr := date[2]
-	yearStr := date[3]
+func calculateDate(date string) string {
+	dayStr := string(date[0:2])
+	monthStr := string(date[3:5])
+	yearStr := string(date[6:10])
 
 	day, _ := strconv.Atoi(dayStr)
 	month, _ := strconv.Atoi(monthStr)

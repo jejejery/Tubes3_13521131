@@ -32,8 +32,8 @@ func checkQuestion(input string) string {
 		ans = "mathoperation"
 	} 
 	if isDate(input) {
-		dateparse, _ := regexp.Compile(`(\d{2})/(\d{2}/)\(d{4})`)
-		date := dateparse.FindStringSubmatch(input)
+		dateparse, _ := regexp.Compile(`(\d{2})/(\d{2})/(\d{4})`)
+		date := dateparse.FindString(input)
 		day := calculateDate(date) 
 		ans = day
 	} 
