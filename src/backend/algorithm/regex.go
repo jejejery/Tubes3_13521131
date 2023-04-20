@@ -1,9 +1,11 @@
 package algorithm
 
-import "regexp"
+import (
+	"regexp"
+)
 
 func isMathOperation(pattern string) bool {
-	operation := `^(\d+)\s*([\-\+\*\/])\s*(\d+)(\s*([\-\+\*\/])\s*(\d+)){0,}\?*$`
+	operation := `^(\d+)\s*([\-\+\*\/])\s*(\d+)(\s*([\-\+\*\/])\s*(\d+)){0,}.*$`
 	regex := regexp.MustCompile(operation)
 	return regex.MatchString(pattern)
 }
@@ -30,7 +32,10 @@ func checkQuestion(input string) string {
 		ans = "mathoperation"
 	} 
 	if isDate(input) {
-		ans = "date"
+		dateparse, _ := regexp.Compile(`(\d{2})/(\d{2}/)\(d{4})`)
+		date := dateparse.FindStringSubmatch(input)
+		day := calculateDate(date) 
+		ans = day
 	} 
 	if isAddingQNAToDatabase(input) {
 		ans = "adding"
@@ -40,3 +45,5 @@ func checkQuestion(input string) string {
 	}
 	return ans
 }
+
+
