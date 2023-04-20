@@ -1,6 +1,6 @@
 package algorithm
 
-func KMPMatch(text string, pattern string) int {
+func KMPMatch(text string, pattern string) (int, float32) {
 	n := len(text)
 	m := len(pattern)
 
@@ -11,7 +11,7 @@ func KMPMatch(text string, pattern string) int {
 	for i < n {
 		if (pattern[j] == text[i]) {
 			if (j == m - 1) {
-				return i - m + 1
+				return i - m + 1, similarityPercentage(text, pattern)
 			}
 			i++
 			j++
@@ -21,7 +21,7 @@ func KMPMatch(text string, pattern string) int {
 			i++
 		}
 	}
-	return -1
+	return -1, similarityPercentage(text, pattern)
 }
 
 func calculateBorder(pattern string) []int {
