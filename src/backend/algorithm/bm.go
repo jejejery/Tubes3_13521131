@@ -1,19 +1,19 @@
-package main
+package algorithm
 
-func BMMatch(text string, pattern string) int {
+func BMMatch(text string, pattern string) (int, float32) {
 	last := buildLast(pattern)
 	n := len(text)
 	m := len(pattern)
 	i := (m - 1)
 	if i > (n - 1) {
-		return -1
+		return -1, similarityPercentage(text, pattern)
 	}
 	j := (m - 1)
 
 	for ok := true; ok; ok = (i <= n-1) {
 		if pattern[j] == text[i] {
 			if j == 0 {
-				return i
+				return i, similarityPercentage(text, pattern)
 			} else {
 				i--
 				j--
@@ -29,7 +29,7 @@ func BMMatch(text string, pattern string) int {
 
 		}
 	}
-	return -1
+	return -1, similarityPercentage(text, pattern)
 
 }
 
