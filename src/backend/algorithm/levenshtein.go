@@ -1,6 +1,6 @@
 package algorithm
 
-func minInt(x int, y int, z int) int {
+func min3Int(x int, y int, z int) int {
 	if x <= y && x <= z {
 		return x
 	} else if y <= x && y <= z {
@@ -9,6 +9,7 @@ func minInt(x int, y int, z int) int {
 		return z
 	}
 }
+
 func Distance(text string, pattern string) int {
 	return MinimumDist(0, 0, text, pattern)
 }
@@ -17,12 +18,19 @@ func MinimumDist(idx1 int, idx2 int, text string, pattern string) int {
 	if idx1 == len(text) && idx2 == len(pattern) {
 		return (len(text) - idx1 + len(pattern) - idx2)
 	}
-
-	if text[idx1] == pattern[idx2] {
-		return MinimumDist((idx1 + 1), (idx2 + 1), text, pattern)
-	} else {
-		return 1 + (minInt(MinimumDist(idx1, idx2+1, text, pattern), MinimumDist(idx1+1, idx2, text, pattern), MinimumDist(idx1+1, idx2+2, text, pattern)))
+	if idx1 < len(text) && idx2 < len(pattern) {
+		if text[idx1] == pattern[idx2] {
+			return MinimumDist((idx1 + 1), (idx2 + 1), text, pattern)
+		}
 	}
+	if idx1 < len(text) && idx2 < len(pattern) {
+		return 1 + (min3Int(MinimumDist(idx1+1, idx2+1, text, pattern), MinimumDist(idx1+1, idx2, text, pattern), MinimumDist(idx1, idx2+1, text, pattern)))
+	} else if idx1 < len(text) {
+		return 1 + MinimumDist(idx1+1, idx2, text, pattern)
+	} else {
+		return 1 + MinimumDist(idx1, idx2+1, text, pattern)
+	}
+
 }
 
 func similarityPercentage(text string, pattern string) float32 {
