@@ -1,6 +1,12 @@
 package algorithm
 
+import (
+	"strings"
+)
+
 func BMMatch(text string, pattern string) (int, float32) {
+	text = strings.ToLower(text)
+	pattern = strings.ToLower(pattern)
 	last := buildLast(pattern)
 	n := len(text)
 	m := len(pattern)
