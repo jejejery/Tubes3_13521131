@@ -28,7 +28,7 @@ func isErasingQuestion(pattern string) bool {
 func checkQuestion(input string) string {
 	var ans string = ""
 	if isMathOperation(input) {
-		ans = "mathoperation"
+		ans = calculateMathOperation(input)
 	} 
 	if isDate(input) {
 		dateparse, _ := regexp.Compile(`(\d{2})/(\d{2})/(\d{4})`)
