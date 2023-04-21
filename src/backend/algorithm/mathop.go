@@ -10,31 +10,38 @@ func calculateMathOperation(input string) string {
 	
 	matcharray := matharray.FindAllStringSubmatch(input, -1) 
 
-	fmt.Println(matcharray)
+	var result int 
+	for _, match := range matcharray {
+		operand1, _ := strconv.Atoi(match[1])
+		operator := match[2]
+		operand2, _ := strconv.Atoi(match[3])
 
-	result, _ := strconv.Atoi(matcharray[0][1])
-	for i := 0; i < len(matcharray[0])-1; i+=2 {
-		operator := matcharray[0][i+2]
-		operand, _ := strconv.Atoi(matcharray[0][i+3])
 		switch operator {
 		case "+":
-			result += operand
+			result = operand1 + operand2
 		case "-":
-			result -= operand
+			result = operand1 - operand2
 		case "*":
-			result *= operand
+			result = operand1 * operand2
 		case "/":
-			result /= operand
+			result = operand1 / operand2
 		}
 
-		fmt.Println(operator)
-		fmt.Println(i)
-		fmt.Println(len(matcharray[0]))
-		if i < len(matcharray[0])-3 {
-			nextOperator := matcharray[0][i+4]
-			if nextOperator == "*" || nextOperator == "/" {
-				continue
+		// check for additional operation
+		for i := 4; i < len(match); i+=2 {
+			op := match[i]
+			operand3, _ := strconv.Atoi(match[i+1])
+			switch op {
+			case "+":
+				result += operand3
+			case "-":
+				result -= operand3
+			case "*":
+				result *= operand3
+			case "/":
+				result /= operand3
 			}
+			
 		}
 	}
 
