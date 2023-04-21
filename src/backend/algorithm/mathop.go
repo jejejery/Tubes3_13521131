@@ -3,6 +3,7 @@ package algorithm
 import (
 	"regexp"
 	"strconv"
+	"fmt"
 )
 
 func calculateMathOperation(input string) string {
