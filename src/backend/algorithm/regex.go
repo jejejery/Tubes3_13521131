@@ -5,7 +5,7 @@ import (
 )
 
 func isMathOperation(pattern string) bool {
-	operation := `^(\d+)\s*([\-\+\*\/])\s*(\d+)(\s*([\-\+\*\/])\s*(\d+)){0,}.*$`
+	operation := `^(-?\d+)\s*([\-\+\*\/])\s*(-?\d+)(\s*([\-\+\*\/])\s*(-?\d+)){0,}.*$`
 	regex := regexp.MustCompile(operation)
 	return regex.MatchString(pattern)
 }

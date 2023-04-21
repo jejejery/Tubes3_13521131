@@ -6,7 +6,7 @@ import (
 )
 
 func calculateMathOperation(input string) string {
-	matharray := regexp.MustCompile(`(\d+)\s*([-+*/])\s*(\d+)(?:\s*([-+*/])\s*(\d+))*`)
+	matharray := regexp.MustCompile(`(-?\d+)\s*([-+*/])\s*(-?\d+)(?:\s*([-+*/])\s*(-?\d+))*`)
 	
 	matcharray := matharray.FindAllStringSubmatch(input, -1) 
 
