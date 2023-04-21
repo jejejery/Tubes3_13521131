@@ -10,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import { Planet } from 'react-kawaii';
 import styles from './SideBar.modules.css'
-import Switch from "react-switch";
+import RSwitch from "react-switch";
 
 
 
@@ -18,15 +18,20 @@ class SideBar extends React.Component {
     constructor(props){
       super(props);
       this.state = {
-      isChecked: false,
       isKMP : false,
       isBM : false
         };
     }
 
-    setIsChecked = (e) =>{
+    setKMP = (e) =>{
       this.setState({
-        isChecked : !this.state.isChecked
+        isKMP : !this.state.isKMP
+      })
+    }
+
+    setBM = (e) =>{
+      this.setState({
+        isBM : !this.state.isBM
       })
     }
 
@@ -58,13 +63,13 @@ class SideBar extends React.Component {
                       >
                       <label >
                         <span><p>KMP</p></span>
-                        <Switch onChange={this.setIsChecked} checked={this.state.isChecked} 
+                        <RSwitch onChange={this.setKMP} checked={this.state.isKMP} 
                                 onColor = '#8d4ca7' checkedIcon={false}uncheckedIcon={false} disabled = {this.state.isBM}/>
                       </label>
                       <p></p>
                       <label>
                         <span><p>Boyer-Moore</p></span>
-                        <Switch onChange={this.setIsChecked } checked={this.state.isChecked} 
+                        <RSwitch onChange={this.setBM} checked={this.state.isBM} 
                                 onColor = '#8d4ca7' checkedIcon={false}uncheckedIcon={false} disabled = {this.state.isKMP}/>
                       </label>
                       </div>

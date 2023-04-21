@@ -1,8 +1,11 @@
 import React from 'react';
 import "./App.css"
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Switch} from 'react-router-dom';
 import SideBar from './components/SideBar/SideBar';
 import MainGPT from './pages/MainGPT/MainGPT';
+import FirstPage from './pages/FirstPage/FirstPage'
+import About from './pages/About/About'
+
 
 
 
@@ -13,8 +16,9 @@ function App() {
       
     <Router>
       <Routes>
-        {/* <Route path='/' active element={<Home/>} /> */}
-        <Route path='/MainGPT' element={<MainGPT/>} />
+          <Route path='/' active element={<FirstPage/>} />
+          <Route path='/MainGPT' element={<MainGPT/>} />
+          <Route path='/About' element={<About/>} />          
       </Routes>
     </Router>
   

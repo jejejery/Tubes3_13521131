@@ -1,0 +1,13 @@
+.main{
+    background-color: whitesmoke;
+}
+
+.chatbox{
+    position: absolute;
+    top: 5%;
+    bottom: 10%;
+    left: 17%;
+    right: 5%;
+    background-color: aquamarine;
+    transition: opacity 0.5s ease-in-out;
+}
