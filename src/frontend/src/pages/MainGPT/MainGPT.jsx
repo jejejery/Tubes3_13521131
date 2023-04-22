@@ -13,10 +13,18 @@ class MainGPT extends React.Component {
     constructor(props){
       super(props);
       this.state = {
+        value : ""
       };
       
     }
-    
+    handleReadText = (event) =>{
+      this.setState({value: event.target.value})
+      console.log(this.state.value)
+    }
+    handleSubmit = (event) => {
+      event.preventDefault()
+      
+    }
 
     render() { 
       return (
