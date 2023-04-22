@@ -39,18 +39,18 @@ func calculateMathOperation(input string) string {
 		} else {
 			if operator == "*" {
 				result = operand1 * operand2
-				buffer = removeElement(buffer, 0)
-				buffer = removeElement(buffer, 0)
-				buffer = removeElement(buffer, 0)
+				buffer = removeElement(buffer, 1)
+				buffer = removeElement(buffer, 1)
+				buffer = removeElement(buffer, 1)
 				e := strconv.Itoa(result)
-				buffer = insertElement(buffer, e, 0)
+				buffer = insertElement(buffer, e, 1)
 			} else if operator == "/" {
 				result = operand1 * operand2
 				buffer = removeElement(buffer, 1)
-				buffer = removeElement(buffer, 0)
-				buffer = removeElement(buffer, 0)
+				buffer = removeElement(buffer, 1)
+				buffer = removeElement(buffer, 1)
 				e := strconv.Itoa(result)
-				buffer = insertElement(buffer, e, 0)
+				buffer = insertElement(buffer, e, 1)
 			} else if operator == "+"  || operator == "-" {
 				i += 2
 			}
