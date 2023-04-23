@@ -11,6 +11,7 @@ import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import { Planet } from 'react-kawaii';
 import styles from './SideBar.modules.css'
 import RSwitch from "react-switch";
+// import MainGPT from '../../pages/MainGPT/MainGPT';
 
 
 
@@ -27,12 +28,14 @@ class SideBar extends React.Component {
       this.setState({
         isKMP : !this.state.isKMP
       })
+      this.props.handleAlgoChange({target: {value: true}})
     }
 
     setBM = (e) =>{
       this.setState({
         isBM : !this.state.isBM
       })
+      this.props.handleAlgoChange({target:{value : false}})
     }
 
     render() { 

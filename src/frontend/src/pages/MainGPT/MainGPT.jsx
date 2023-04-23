@@ -18,6 +18,9 @@ class MainGPT extends React.Component {
       };
       
     }
+    handleAlgoChange = (event) =>{
+      this.setState({algo: event.target.value})
+    }
     handleReadText = (event) =>{
       this.setState({text: event.target.value})
       // console.log(this.state.value)
@@ -44,23 +47,26 @@ class MainGPT extends React.Component {
 
     render() { 
       return (
+      
       <div className={styles.main}>
         <div style={{ display: 'flex', flex: '1 auto', justifyContent: 'center', position: 'relative' }}>
-          <SideBar style={{ margin: '0 10px' }} />
+          <SideBar style={{ margin: '0 10px' }} handleAlgoChange= {this.handleAlgoChange} algo = {this.state.algo}/>
           <div className={styles.chatbox}>
             <h1>to be continued...</h1>
           </div>
           <div style={{ margin: '0 10px', flex: 1, position: 'relative' }}>
             <Form onSubmit = {this.handleSubmit}>
-            <Form.Group controlId="formMessage">
+            {/* <Form.Group controlId="formMessage"> */}
+            <div style = {{display: 'flex', alignItems: 'flex-end', position: 'absolute', bottom: '2%', width: '100%'}}>
             <Form.Control
             type="text"
             placeholder="Send a message..."
             onChange={this.handleReadText}
-            style={{ fontSize: '24px', position: 'absolute', bottom: '2%', margin: '0 10px', marginLeft: 'auto' }}
+            style={{ fontSize: '24px', marginLeft: '5.5%', marginRight: '0px', width: '80%'}}
             />
-            <Button type = "submit" style = {{position: 'absolute', right: '0', bottom: '0'}}> send </Button>
-            </Form.Group>
+            <Button type = "submit" style = {{marginLeft: '5px', height: '50px'}}> send </Button>
+            </div>
+            {/* </Form.Group> */}
             </Form>
          </div>
        </div>
