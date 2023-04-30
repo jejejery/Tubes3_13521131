@@ -19,30 +19,28 @@ func isAddingQNAToDatabase(pattern string) bool {
 	regex := regexp.MustCompile(`[tT][aA][mM][bB][aA][hH][kK][aA][nN]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*\s*[dD][eE][nN][gG][aA][nN]\s*[jJ][aA][wW][aA][bB][aA][nN]\s*.*\s*.*`)
 	return regex.MatchString(pattern)
 }
-	
+
 func isErasingQuestion(pattern string) bool {
 	regex := regexp.MustCompile(`[hH][aA][pP][uU][sS]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*$`)
 	return regex.MatchString(pattern)
 }
 
-func checkQuestion(input string) string {
+func CheckQuestion(input string) string {
 	var ans string = ""
 	if isMathOperation(input) {
 		ans = calculateMathOperation(input)
-	} 
+	}
 	if isDate(input) {
 		dateparse, _ := regexp.Compile(`(\d{2})/(\d{2})/(\d{4})`)
 		date := dateparse.FindString(input)
-		day := calculateDate(date) 
+		day := calculateDate(date)
 		ans = day
-	} 
+	}
 	if isAddingQNAToDatabase(input) {
 		ans = "adding"
-	} 
+	}
 	if isErasingQuestion(input) {
 		ans = "erasing"
 	}
 	return ans
 }
-
-

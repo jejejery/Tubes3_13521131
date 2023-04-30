@@ -14,7 +14,8 @@ class MainGPT extends React.Component {
       super(props);
       this.state = {
         text : "",
-        algo : true
+        algo : true,
+        answer: ""
       };
       
     }
@@ -29,20 +30,41 @@ class MainGPT extends React.Component {
       event.preventDefault()
       console.log(this.state.text)
       const data = {
-        InputText : this.state.text,
+        Input : this.state.text,
         Algorithm: this.state.algo,
       };
-      try{
-        console.log(data)
-        const res = await axios.post("http://localhost:8000/api/input", data)
-        console.log(res.data)
-      }catch(error){
-        console.log(error)
-      }
-      
+      await axios.post("http://localhost:8000/api/input", data)
+        .then(response => {
+          this.setState({answer : response.data.result})
 
+          console.log(data.Input);
+          const pattern1 = /tambahkan pertanyaan (.+) dengan jawaban (.+)/i;
+          const pattern2 = /hapus pertanyaan (.+)/i;
+          const matches1 = data.Input.match(pattern1);
+          const matches2 = data.Input.match(pattern2);
+          if(matches1){
+            // todo: question is available
+            const newQna = {
+              Question: matches1[1],
+              Answer : matches1[2],
+            }
+              axios.post("http://localhost:8000/api/qna", newQna);
+          }
+          else if(matches2){
+            const deleteQna = {
+              Question: matches2[1],
+              Answer: "",
+            }
+            axios.delete("http://localhost:8000/api/qna", {data: deleteQna});
+          }
+   
+          }
+        )
+        .catch(error =>{
+          console.log(error);
+        })
+        this.setState({text: ""})
 
-      
     }
 
     render() { 
@@ -61,6 +83,7 @@ class MainGPT extends React.Component {
             <Form.Control
             type="text"
             placeholder="Send a message..."
+            value = {this.state.text}
             onChange={this.handleReadText}
             style={{ fontSize: '24px', marginLeft: '5.5%', marginRight: '0px', width: '80%'}}
             />
