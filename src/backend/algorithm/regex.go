@@ -2,9 +2,16 @@ package algorithm
 
 import (
 	"regexp"
+	"strconv"
 )
 
-func isMathOperation(pattern string) bool {
+func MathOperation(pattern string) bool {
+	operation := `^(-?\d+)\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)(\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)){0,}.*`
+	regex := regexp.MustCompile(operation)
+	return regex.MatchString(pattern)
+}
+
+func isMathOperationValid(pattern string) bool {
 	operation := `^(-?\d+)\s*([\-\+\*\/])\s*(-?\d+)(\s*([\-\+\*\/])\s*(-?\d+)){0,}.*$`
 	regex := regexp.MustCompile(operation)
 	return regex.MatchString(pattern)
@@ -27,14 +34,26 @@ func isErasingQuestion(pattern string) bool {
 
 func checkQuestion(input string) string {
 	var ans string = ""
-	if isMathOperation(input) {
-		ans = calculateMathOperation(input)
+	if MathOperation(input) {
+		if isMathOperationValid(input) {
+			ans = calculateMathOperation(input)
+		} else {
+			ans = "Sintaks persamaan tidak valid!"
+		}
 	} 
 	if isDate(input) {
 		dateparse, _ := regexp.Compile(`(\d{2})/(\d{2})/(\d{4})`)
 		date := dateparse.FindString(input)
-		day := calculateDate(date) 
-		ans = day
+		dayStr := string(date[0:2])
+		monthStr := string(date[3:5])
+		day, _ := strconv.Atoi(dayStr)
+		month, _ := strconv.Atoi(monthStr)
+		if month == 2 && day > 29 {
+			ans = "Masukan tanggal tidak valid!"
+		} else {
+			day := calculateDate(date) 
+			ans = day
+		}
 	} 
 	if isAddingQNAToDatabase(input) {
 		ans = "adding"
