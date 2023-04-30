@@ -1,0 +1,25 @@
+.customswitch {
+    background-color:#7007e7a4!important;
+  }
+
+  .history {
+    line-height: 40px;
+    background-color: aliceblue;
+    width: 200px;
+    height: 450px;
+    overflow: scroll;
+    padding: 5px 5px;
+  }
+
+  .history ul {
+    list-style: disc;
+    list-style-color: lightblue;
+    color: purple;
+  }
+  
+  .history a {
+    display: block;
+    padding: 5px 0;
+    color: palevioletred;
+    text-decoration: none;
+  }
