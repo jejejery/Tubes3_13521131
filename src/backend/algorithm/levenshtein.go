@@ -10,31 +10,37 @@ func min3Int(x int, y int, z int) int {
 	}
 }
 
-func Distance(text string, pattern string) int {
-	return MinimumDist(0, 0, text, pattern)
-}
+func MinimumDist(s, t string) int {
+	m := len(s)
+	n := len(t)
 
-func MinimumDist(idx1 int, idx2 int, text string, pattern string) int {
-	if idx1 == len(text) && idx2 == len(pattern) {
-		return (len(text) - idx1 + len(pattern) - idx2)
+	// initialize the distance matrix
+	d := make([][]int, m+1)
+	for i := range d {
+		d[i] = make([]int, n+1)
+		d[i][0] = i
 	}
-	if idx1 < len(text) && idx2 < len(pattern) {
-		if text[idx1] == pattern[idx2] {
-			return MinimumDist((idx1 + 1), (idx2 + 1), text, pattern)
+	for j := range d[0] {
+		d[0][j] = j
+	}
+
+	// fill the distance matrix
+	for j := 1; j <= n; j++ {
+		for i := 1; i <= m; i++ {
+			if s[i-1] == t[j-1] {
+				d[i][j] = d[i-1][j-1]
+			} else {
+				d[i][j] = min3Int(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+1)
+			}
 		}
 	}
-	if idx1 < len(text) && idx2 < len(pattern) {
-		return 1 + (min3Int(MinimumDist(idx1+1, idx2+1, text, pattern), MinimumDist(idx1+1, idx2, text, pattern), MinimumDist(idx1, idx2+1, text, pattern)))
-	} else if idx1 < len(text) {
-		return 1 + MinimumDist(idx1+1, idx2, text, pattern)
-	} else {
-		return 1 + MinimumDist(idx1, idx2+1, text, pattern)
-	}
+
+	return d[m][n]
 
 }
 
 func similarityPercentage(text string, pattern string) float32 {
-	distance := Distance(text, pattern)
+	distance := MinimumDist(text, pattern)
 	lenText := len(text)
 	lenPattern := len(pattern)
 
