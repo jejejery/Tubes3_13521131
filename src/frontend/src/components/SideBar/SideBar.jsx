@@ -9,7 +9,7 @@ import { NavLink } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import { Planet } from 'react-kawaii';
-import styles from './SideBar.modules.css'
+import styles from './SideBar.module.css'
 import RSwitch from "react-switch";
 // import MainGPT from '../../pages/MainGPT/MainGPT';
 
@@ -28,15 +28,33 @@ class SideBar extends React.Component {
       this.setState({
         isKMP : !this.state.isKMP
       })
-      this.props.handleAlgoChange({target: {value: true}})
+      if(!this.state.isKMP)this.props.handleAlgoChange({target: {value: 1}});
+      else this.props.handleAlgoChange({target: {value: 0}});
     }
 
     setBM = (e) =>{
       this.setState({
         isBM : !this.state.isBM
       })
-      this.props.handleAlgoChange({target:{value : false}})
+      if(!this.state.isBM)this.props.handleAlgoChange({target: {value: 2}});
+      else this.props.handleAlgoChange({target: {value: 0}});
     }
+
+    render_history(){
+      return(
+        <div class={styles.history}>
+          <ul>
+            <li><a href="/MainGPT">Histori 1</a></li>
+            <li><a href="/MainGPT">Histori 2</a></li>
+            <li><a href="/MainGPT">Histori 3</a></li>
+          </ul>
+        </div>
+
+
+        
+      )
+    }
+
 
     render() { 
         return(
@@ -52,6 +70,7 @@ class SideBar extends React.Component {
                       <CDBSidebarMenu>                       
                           <CDBSidebarMenuItem icon="history" >History</CDBSidebarMenuItem>
                       </CDBSidebarMenu>
+                      {this.render_history()}
                     </CDBSidebarContent>
             
                     <CDBSidebarFooter style={{ textAlign: 'center' , alignItems: 'center' }}>

@@ -12,7 +12,23 @@ class About extends React.Component {
       };
       
     }
-    
+
+    superblock(nim,nama){
+      return (
+        <div className={styles.superblock}>
+          
+          <div className={styles.photo}></div>
+          <div className={styles.name}>
+            <div>
+            <span>{nim}</span>
+            <span>{nama}</span>
+            
+            </div>
+          </div>
+          
+        </div>
+      );
+    };
 
     render() { 
       return (
@@ -20,18 +36,31 @@ class About extends React.Component {
 
       <div className={styles.head}>
         <div className={styles.title}>
-          <span><Cat size={80} mood="lovestruck" color="#FDA7DC" />About</span>
+          <span><Cat size={80} mood="happy" color="#FDA7DC" /><a href="/" >Home</a></span>
         </div>
       </div>
 
      
       <div className={styles.intro}>
-        <div className={styles.content}>
-    
-          <p>
-          Website ini dibuat oleh Dida, Gita, dan Jerry hehe :)
-          </p>
+        <div className={styles.content}>  
+          This website developed by: 
         </div>
+        <div style={{display: "flex", marginLeft: "300px", marginTop: "70px"}}>
+          <div style={{display: "inline-block"}}>{this.superblock("13521131")}</div><span style={{marginRight: "10px"}}></span>
+          <div style={{display: "inline-block"}}>{this.superblock("13521156")}</div><span style={{marginRight: "10px"}}></span>
+          <div style={{display: "inline-block"}}>{this.superblock("13521157")}</div>
+        </div>
+
+        
+      </div>
+
+      <div className={styles.github}>  
+        Want to know our repository?<br/>
+        Check Our Github Repository Below!<br/>
+        <a href="https://github.com/jejejery/Tubes3_IF2211" target="_blank" rel="noopener noreferrer">
+         <button className={styles.button}>Github Repository</button>
+        </a>
+        
       </div>
 
      
