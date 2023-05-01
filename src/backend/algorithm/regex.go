@@ -7,13 +7,13 @@ import (
 )
 
 func MathOperation(pattern string) bool {
-	operation := `^(-?\d+)\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)(\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)){0,}(\s.*)*(\n.*)*$`
+	operation := `^(-?\d+)\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*(-?\d+)(\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*(-?\d+)){0,}(\s.*)*(\n.*)*$`
 	regex := regexp.MustCompile(operation)
 	return regex.MatchString(pattern)
 }
 
 func isMathOperationValid(pattern string) bool {
-	operation := `^(-?\d+)\s*([\-\+\*\/])\s*(-?\d+)(\s*([\-\+\*\/])\s*(-?\d+)){0,}(\s.*)*(\n.*)*$`
+	operation := `^(-?\d+)\s*([\^\-\+\*\/])\s*(-?\d+)(\s*([\^\-\+\*\/])\s*(-?\d+)){0,}(\s.*)*(\n.*)*$`
 	regex := regexp.MustCompile(operation)
 	return regex.MatchString(pattern)
 }
@@ -64,12 +64,12 @@ func CheckQuestion(input string, ansArray []string) []string {
 		input = strings.Replace(input, matches[0], "", 1)
 	} else if MathOperation(input) {
 		if isMathOperationValid(input) {
-			pattern := `(-?\d+)\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)(\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)){0,}\s*\n*`
+			pattern := `(-?\d+)\s*([\^\-\+\*\/])\s*(-?\d+)(\s*([\^\-\+\*\/])\s*(-?\d+)){0,}\s*\n*`
 			re := regexp.MustCompile(pattern)
 			matches := re.FindStringSubmatch(input)
 			ans = calculateMathOperation(matches[0])
 			ansArray = append(ansArray, ans)
-			} else {
+		} else {
 			ans = "Sintaks persamaan tidak valid!"
 			ansArray = append(ansArray, ans)
 		}
@@ -80,8 +80,6 @@ func CheckQuestion(input string, ansArray []string) []string {
 	} else if isAddingQNAToDatabase(input) {
 		pattern := `[tT][aA][mM][bB][aA][hH][kK][aA][nN]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*\s*[dD][eE][nN][gG][aA][nN]\s*[jJ][aA][wW][aA][bB][aA][nN].*\n+(.+)`
 		re := regexp.MustCompile(pattern)
-		// matches := re.FindStringSubmatch(input)
-		// fmt.Println(matches)
 		if re.MatchString(input) {
 			input = re.ReplaceAllString(input, "$1");
 		} else {
