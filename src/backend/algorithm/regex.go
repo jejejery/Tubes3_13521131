@@ -62,11 +62,6 @@ func CheckQuestion(input string, ansArray []string) []string {
 		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)
 		input = strings.Replace(input, matches[0], "", 1)
-		// if len(matches) > 1 {
-		// 	input = matches[len(matches)-1]
-		// } else {
-		// 	input = ""
-		// }
 	} else if MathOperation(input) {
 		if isMathOperationValid(input) {
 			pattern := `(-?\d+)\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)(\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)){0,}\s*\n*`
@@ -81,16 +76,7 @@ func CheckQuestion(input string, ansArray []string) []string {
 		pattern := `^(-?\d+)\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)(\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)){0,}\s*\n*`
 		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)
-		// pattern := `(-?\d+)\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)(\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)){0,}\s*\n*(.+)`
-		// re := regexp.MustCompile(pattern)
-		// matches := re.FindStringSubmatch(input)
 		input = strings.Replace(input, matches[0], "", 1)
-		// fmt.Println(matches)
-		// if len(matches) > 1 {
-		// 	input = matches[len(matches)-1]
-		// } else {
-		// 	input = ""
-		// }	
 	} else if isAddingQNAToDatabase(input) {
 		pattern := `[tT][aA][mM][bB][aA][hH][kK][aA][nN]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*\s*[dD][eE][nN][gG][aA][nN]\s*[jJ][aA][wW][aA][bB][aA][nN].*\n+(.+)`
 		re := regexp.MustCompile(pattern)
@@ -101,28 +87,11 @@ func CheckQuestion(input string, ansArray []string) []string {
 		} else {
 			input = ""
 		}
-		// if len(matches) > 1 {
-		// 	input = matches[len(matches)-1]
-		// } else {
-		// 	input = ""
-		// }	
 	}  else {
-		// pattern := `^(.*?)\n*`
 		pattern := 	`.*\s*\n*`
 		re := regexp.MustCompile(pattern)
-		matches := re.FindStringSubmatch(input)
-		// if re.MatchString(input) {
-		// 	input = re.ReplaceAllString(input, "$1");
-		// } else {
-		// 	input = ""
-		// }
-		// if len(matches) > 1 {
-		// 	input = matches[1]
-		// } else {
-		// 	input = ""
-		// }	
+		matches := re.FindStringSubmatch(input)	
 		input = strings.Replace(input, matches[0], "", 1)
-		// fmt.Println(matches)
 		return CheckQuestion(input, ansArray)
 	}
 	return CheckQuestion(input, ansArray)
