@@ -36,7 +36,7 @@ func isErasingQuestion(pattern string) bool {
 // var ansArray []string
 // chechQuestion(input, ansArray)
 
-func checkQuestion(input string, ansArray []string) []string {
+func CheckQuestion(input string, ansArray []string) []string {
 	if (len(input) == 0) {
 		return ansArray
 	}
@@ -62,7 +62,7 @@ func checkQuestion(input string, ansArray []string) []string {
 			ans = day
 			ansArray = append(ansArray, ans)
 		}
-		pattern := `([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}/\d{2}/\d{4}.\s*\n*(.+)`
+		pattern := `([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}/\d{2}/\d{4}\s*\n*(.+)`
 		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)
 		if len(matches) > 1 {
