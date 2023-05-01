@@ -12,6 +12,7 @@ import (
 func Index(c *fiber.Ctx) error {
 	var qnas []model.QnA
 	database.DB.Find(&qnas)
+	
 	return c.JSON(qnas)
 }
 
@@ -35,29 +36,48 @@ func Show(c *fiber.Ctx) error {
 
 func Create(c *fiber.Ctx) error {
 	var newQna model.QnA
+	var qna model.QnA
 	if err := c.BodyParser(&newQna); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Bad request!!",
 		})
 	}
-	if err := database.DB.Create(&newQna).Error; err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Internal server error!!",
-		})
+	if err := database.DB.Where("question = ?", newQna.Question).First(&qna).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			if err := database.DB.Create(&newQna).Error; err != nil {
+				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+					"message": "Internal server error!!",
+				})
+			}
+			return c.JSON(newQna)
+		} else {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "Internal server error!!",
+			})
+		}
 	}
-	return c.JSON(newQna)
+	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+		"message": "The question is available",
+	})
+
 }
 
 func Delete(c *fiber.Ctx) error {
-	id := c.Params("id")
-
-	var qna model.QnA
-	if database.DB.Delete(&qna, id).RowsAffected == 0 {
-		return c.Status(http.StatusNotFound).JSON(fiber.Map{
-			"message": "Can not delete the data",
+	var deleteQna model.QnA
+	var temp model.QnA
+	if err := c.BodyParser(&deleteQna); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Bad request!!",
 		})
 	}
-	return c.JSON(fiber.Map{
-		"message": "Data is successfully deleted!",
-	})
+	if err := database.DB.Where("question = ?", deleteQna.Question).First(&temp).Error; err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "The question you want to delete is unavailable! You can't delete it",
+		})
+	} else {
+		database.DB.Where("question = ?", deleteQna.Question).Delete(&temp)
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"message": "Record deleted successfully",
+		})
+	}
 }

@@ -13,6 +13,7 @@ import { SpeechBubble} from 'react-kawaii';
 class MainGPT extends React.Component {  
     constructor(props){
       super(props);
+
       this.myQuestion = React.createRef(); // membuat ref
       this.state = {        
         algo : 0,//algo code: 0 is null, 1 is KMP, and 2 is BM
@@ -34,6 +35,7 @@ class MainGPT extends React.Component {
 
 
       const data = {
+
         InputText :this.myQuestion.current.value,
         Algorithm: this.state.algo,
       };
@@ -44,19 +46,43 @@ class MainGPT extends React.Component {
       temp.push(this.render_q_block(this.myQuestion.current.value,"belum adaaaa hehe :v"))
       this.setState({qaBlocks: temp})
       
+      
+      //try-catch
+      
+      
+      await axios.post("http://localhost:8000/api/input", data)
+        .then(response => {
+          this.setState({answer : response.data.result})
+
+          console.log(data.Input);
+          const pattern1 = /tambahkan pertanyaan (.+) dengan jawaban (.+)/i;
+          const pattern2 = /hapus pertanyaan (.+)/i;
+          const matches1 = data.Input.match(pattern1);
+          const matches2 = data.Input.match(pattern2);
+          if(matches1){
+            // todo: question is available
+            const newQna = {
+              Question: matches1[1],
+              Answer : matches1[2],
+            }
+              axios.post("http://localhost:8000/api/qna", newQna);
+          }
+          else if(matches2){
+            const deleteQna = {
+              Question: matches2[1],
+              Answer: "",
+            }
+            axios.delete("http://localhost:8000/api/qna", {data: deleteQna});
+          }
+   
+          }
+        )
+        .catch(error =>{
+          console.log(error);
+        })
+        
       //reset the question
       this.myQuestion.current.value = ""
-      //try-catch
-      try{
-        console.log(data)
-        const res = await axios.post("http://localhost:8000/api/input", data)
-        console.log(res.data)
-
-      // mengubah nilai input menjadi kosong (empty string)
-       
-      }catch(error){
-        console.log(error)
-      }
     }
     
     render_q_block(question,answer){

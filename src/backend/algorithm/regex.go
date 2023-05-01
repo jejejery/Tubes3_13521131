@@ -58,7 +58,7 @@ func checkQuestion(input string, ansArray []string) []string {
 			ans = "Masukan tanggal tidak valid!"
 			ansArray = append(ansArray, ans)
 		} else {
-			day := calculateDate(date) 
+			day := calculateDate(date)
 			ans = day
 			ansArray = append(ansArray, ans)
 		}
@@ -111,5 +111,3 @@ func checkQuestion(input string, ansArray []string) []string {
 	}
 	return checkQuestion(input, ansArray)
 }
-
-
