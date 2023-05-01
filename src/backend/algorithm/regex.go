@@ -107,7 +107,7 @@ func CheckQuestion(input string, ansArray []string) []string {
 		} else {
 			input = ""
 		}	
-		return checkQuestion(input, ansArray) 
+		return CheckQuestion(input, ansArray) 
 	}
-	return checkQuestion(input, ansArray)
+	return CheckQuestion(input, ansArray)
 }
