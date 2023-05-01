@@ -47,9 +47,14 @@ func checkQuestion(input string, ansArray []string) []string {
 		date := dateparse.FindString(input)
 		dayStr := string(date[0:2])
 		monthStr := string(date[3:5])
+		yearStr := string(date[6:10])
 		day, _ := strconv.Atoi(dayStr)
 		month, _ := strconv.Atoi(monthStr)
-		if month == 2 && day > 29 {
+		year, _ := strconv.Atoi(yearStr)
+		if (month == 2 && day > 29 && leap_bool(year)) && (month == 2 && day > 28 && !leap_bool(year)) {
+			ans = "Masukan tanggal tidak valid!"
+			ansArray = append(ansArray, ans)
+		} else if month < 0 || day < 0 || year < 0 {
 			ans = "Masukan tanggal tidak valid!"
 			ansArray = append(ansArray, ans)
 		} else {
