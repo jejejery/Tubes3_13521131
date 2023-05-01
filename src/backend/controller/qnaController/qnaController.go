@@ -12,6 +12,7 @@ import (
 func Index(c *fiber.Ctx) error {
 	var qnas []model.QnA
 	database.DB.Find(&qnas)
+	
 	return c.JSON(qnas)
 }
 

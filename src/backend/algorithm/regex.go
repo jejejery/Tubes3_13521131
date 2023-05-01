@@ -40,7 +40,7 @@ func CheckQuestion(input string) string {
 		} else {
 			ans = "Sintaks persamaan tidak valid!"
 		}
-	} 
+	}
 	if isDate(input) {
 		dateparse, _ := regexp.Compile(`(\d{2})/(\d{2})/(\d{4})`)
 		date := dateparse.FindString(input)
@@ -55,15 +55,15 @@ func CheckQuestion(input string) string {
 		} else if month == 2 && day > 29 {
 			ans = "Masukan tanggal tidak valid!"
 		} else {
-			day := calculateDate(date) 
+			day := calculateDate(date)
 			ans = day
 		}
-	} 
+	}
 	if isAddingQNAToDatabase(input) {
-		ans = "adding"
+		ans = "Question is added to database!"
 	}
 	if isErasingQuestion(input) {
-		ans = "erasing"
+		ans = "Question is deleted from database!"
 	}
 	return ans
 }

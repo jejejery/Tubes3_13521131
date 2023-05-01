@@ -2,6 +2,8 @@ package inputcontroller
 
 import (
 	"net/http"
+	"sort"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jejejery/src/backend/algorithm"
@@ -46,6 +48,77 @@ func Create(c *fiber.Ctx) error {
 		})
 	}
 	answer := algorithm.CheckQuestion(input.Input)
+	if answer == "" {
+		var qnas []model.QnA
+		database.DB.Find(&qnas)
+		isMatch := false
+		// save similarity match for match n non match pattern so far
+		matchAnswerString := ""
+		similarityMatch := 0.0
+		similarityNonMatch := 0.0
+		nonMatchStringQuestion := ""
+		nonMatchStringAnswer := ""
+		type stringSimilarity struct {
+			nonMatchStringQuestion string
+			nonMatchStringAnswer   string
+			similarityPercentage   float64
+		}
+		var nonMatchStrings []stringSimilarity
+		n := len(qnas)
+		for i := 0; i < n; i++ {
+			if input.Algorithm {
+				// kmp
+				index, similarityTemp := (algorithm.KMPMatch(input.Input, qnas[i].Question))
+				println(similarityTemp)
+				if index == -1 && similarityTemp < 90 {
+					nonMatchStringQuestion = qnas[i].Question
+					println(nonMatchStringQuestion)
+					nonMatchStringAnswer = qnas[i].Answer
+					println(nonMatchStringAnswer)
+					similarityNonMatch = float64(similarityTemp)
+					newTuple := stringSimilarity{nonMatchStringQuestion, nonMatchStringAnswer, similarityNonMatch}
+					nonMatchStrings = append(nonMatchStrings, newTuple)
+				}
+				if index != -1 && similarityTemp >= 90 && similarityTemp > float32(similarityMatch) {
+					matchAnswerString = qnas[i].Answer
+					isMatch = true
+				}
+			} else {
+				// bm
+				inputTemp := strings.ReplaceAll(input.Input, " ", "")
+
+				qnaTemp := strings.ReplaceAll(qnas[i].Question, " ", "")
+				index, similarityTemp := algorithm.BMMatch(inputTemp, qnaTemp)
+
+				if index == -1 && similarityTemp < 90 {
+					nonMatchStringQuestion = qnas[i].Question
+					nonMatchStringAnswer = qnas[i].Answer
+					similarityNonMatch = float64(similarityTemp)
+					newTuple := stringSimilarity{nonMatchStringQuestion, nonMatchStringAnswer, similarityNonMatch}
+					nonMatchStrings = append(nonMatchStrings, newTuple)
+				}
+				if index != -1 && similarityTemp >= 90 && similarityTemp > float32(similarityMatch) {
+					matchAnswerString = qnas[i].Answer
+					isMatch = true
+				}
+			}
+		}
+		if isMatch {
+			answer = matchAnswerString
+
+		} else {
+			sort.Slice(nonMatchStrings, func(i, j int) bool {
+				return nonMatchStrings[i].similarityPercentage > nonMatchStrings[j].similarityPercentage
+			})
+			answer += "Pertanyaan tidak ditemukan di database.\n"
+			answer += "Apakah maksud anda: \n"
+			for i := 1; i <= 3; i++ {
+				answer += (string(i) + ". " + nonMatchStrings[i].nonMatchStringQuestion + "\n")
+			}
+
+		}
+
+	}
 	newInput := model.InputUser{InputText: input.Input, Algorithm: input.Algorithm, Answer: answer}
 	if err := database.DB.Create(&newInput).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
