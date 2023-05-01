@@ -68,13 +68,18 @@ func Create(c *fiber.Ctx) error {
 		for i := 0; i < n; i++ {
 			if input.Algorithm {
 				// kmp
-				index, similarityTemp := (algorithm.KMPMatch(input.Input, qnas[i].Question))
+				println("test")
+				println(input.Input)
+				println(qnas[i].Question)
+				var x string = input.Input
+				var y string = qnas[i].Question
+				index, similarityTemp := algorithm.KMPMatch(x, y)
+				println(index)
 				println(similarityTemp)
+
 				if index == -1 && similarityTemp < 90 {
 					nonMatchStringQuestion = qnas[i].Question
-					println(nonMatchStringQuestion)
 					nonMatchStringAnswer = qnas[i].Answer
-					println(nonMatchStringAnswer)
 					similarityNonMatch = float64(similarityTemp)
 					newTuple := stringSimilarity{nonMatchStringQuestion, nonMatchStringAnswer, similarityNonMatch}
 					nonMatchStrings = append(nonMatchStrings, newTuple)
