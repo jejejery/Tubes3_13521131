@@ -57,3 +57,11 @@ func leap(year int) int {
 		return 0
 	}
 }
+
+func leap_bool(year int) bool {
+    if year%4 == 0 && (year%100 != 0 || year%400 == 0) {
+		return true
+	} else {
+		return false
+	}
+}
