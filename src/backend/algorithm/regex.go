@@ -6,29 +6,29 @@ import (
 )
 
 func MathOperation(pattern string) bool {
-	operation := `^(-?\d+)\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)(\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)){0,}.*`
+	operation := `^(-?\d+)\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)(\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)){0,}\n*.*$`
 	regex := regexp.MustCompile(operation)
 	return regex.MatchString(pattern)
 }
 
 func isMathOperationValid(pattern string) bool {
-	operation := `^(-?\d+)\s*([\-\+\*\/])\s*(-?\d+)(\s*([\-\+\*\/])\s*(-?\d+)){0,}.*$`
+	operation := `^(-?\d+)\s*([\-\+\*\/])\s*(-?\d+)(\s*([\-\+\*\/])\s*(-?\d+)){0,}\n*.*$`
 	regex := regexp.MustCompile(operation)
 	return regex.MatchString(pattern)
 }
 
 func isDate(pattern string) bool {
-	regex := regexp.MustCompile(`^([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}/\d{2}/\d{4}.*$`)
+	regex := regexp.MustCompile(`^([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}/\d{2}/\d{4}\n*.*$`)
 	return regex.MatchString(pattern)
 }
 
 func isAddingQNAToDatabase(pattern string) bool {
-	regex := regexp.MustCompile(`[tT][aA][mM][bB][aA][hH][kK][aA][nN]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*\s*[dD][eE][nN][gG][aA][nN]\s*[jJ][aA][wW][aA][bB][aA][nN]\s*.*\s*.*`)
+	regex := regexp.MustCompile(`^[tT][aA][mM][bB][aA][hH][kK][aA][nN]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*\s*[dD][eE][nN][gG][aA][nN]\s*[jJ][aA][wW][aA][bB][aA][nN].*\n*.*$`)
 	return regex.MatchString(pattern)
 }
-	
+
 func isErasingQuestion(pattern string) bool {
-	regex := regexp.MustCompile(`[hH][aA][pP][uU][sS]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*$`)
+	regex := regexp.MustCompile(`^[hH][aA][pP][uU][sS]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN].*\n*.*$`)
 	return regex.MatchString(pattern)
 }
 
@@ -57,7 +57,7 @@ func checkQuestion(input string, ansArray []string) []string {
 			ans = day
 			ansArray = append(ansArray, ans)
 		}
-		pattern := `([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}/\d{2}/\d{4}.\s*(.+)`
+		pattern := `([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}/\d{2}/\d{4}.\s*\n*(.+)`
 		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)
 		if len(matches) > 1 {
@@ -67,7 +67,7 @@ func checkQuestion(input string, ansArray []string) []string {
 		}
 	} else if MathOperation(input) {
 		if isMathOperationValid(input) {
-			pattern := `(-?\d+)\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)(\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)){0,}\s*`
+			pattern := `(-?\d+)\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)(\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)){0,}\s*\n*`
 			re := regexp.MustCompile(pattern)
 			matches := re.FindStringSubmatch(input)
 			ans = calculateMathOperation(matches[0])
@@ -76,7 +76,7 @@ func checkQuestion(input string, ansArray []string) []string {
 			ans = "Sintaks persamaan tidak valid!"
 			ansArray = append(ansArray, ans)
 		}
-		pattern := `(-?\d+)\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)(\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)){0,}\s*(.+)`
+		pattern := `(-?\d+)\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)(\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)){0,}\s*\n*(.+)`
 		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)
 		if len(matches) > 1 {
@@ -85,11 +85,24 @@ func checkQuestion(input string, ansArray []string) []string {
 			input = ""
 		}	
 	} else if isAddingQNAToDatabase(input) {
-		ans = "adding"
-	} else if isErasingQuestion(input) {
-		ans = "erasing"
-	} else {
-		return ansArray
+		pattern := `[tT][aA][mM][bB][aA][hH][kK][aA][nN]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*\s*[dD][eE][nN][gG][aA][nN]\s*[jJ][aA][wW][aA][bB][aA][nN].*\n*(.+)`
+		re := regexp.MustCompile(pattern)
+		matches := re.FindStringSubmatch(input)
+		if len(matches) > 1 {
+			input = matches[len(matches)-1]
+		} else {
+			input = ""
+		}	
+	}  else {
+		pattern := `.*\n*(.+)`
+		re := regexp.MustCompile(pattern)
+		matches := re.FindStringSubmatch(input)
+		if len(matches) > 1 {
+			input = matches[len(matches)-1]
+		} else {
+			input = ""
+		}	
+		return checkQuestion(input, ansArray) 
 	}
 	return checkQuestion(input, ansArray)
 }
