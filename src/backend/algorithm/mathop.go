@@ -28,46 +28,46 @@ func calculateMathOperation(input string) string {
 		}
 	}
 	
-	var result int 
+	var result float64
 
 	// evaluate the multiplication and division first
 		
 	if len(buffer) == 3 {
-		operand1, _ := strconv.Atoi(buffer[0])
+		operand1, _ := strconv.ParseFloat(buffer[0], 64)
 		operator := buffer[1]
-		operand2, _ := strconv.Atoi(buffer[2])
+		operand2, _ := strconv.ParseFloat(buffer[2], 64)
 		switch operator {
 		case "+":
 			result = operand1 + operand2
-			return strconv.Itoa(result)
+			return strconv.FormatFloat(result, 'f', 2, 64)
 		case "-":
 			result = operand1 - operand2
-			return strconv.Itoa(result)
+			return strconv.FormatFloat(result, 'f', 2, 64)
 		case "*":
 			result = operand1 * operand2
-			return strconv.Itoa(result)
+			return strconv.FormatFloat(result, 'f', 2, 64)
 		case "/":
 			result = operand1 / operand2
-			return strconv.Itoa(result)
+			return strconv.FormatFloat(result, 'f', 2, 64)
 		}
 	} else {
 		i := 0
-		operand1, _ := strconv.Atoi(buffer[0])
+		operand1, _ := strconv.ParseFloat(buffer[0], 64)
 		operator := buffer[1]
-		operand2, _ := strconv.Atoi(buffer[2])
+		operand2, _ := strconv.ParseFloat(buffer[2], 64)
 		if operator == "*" {
 			result = operand1 * operand2
 			buffer = removeElement(buffer, 0)
 			buffer = removeElement(buffer, 0)
 			buffer = removeElement(buffer, 0)
-			e := strconv.Itoa(result)
+			e := strconv.FormatFloat(result, 'f', 2, 64)
 			buffer = insertElement(buffer, e, 0)
 		} else if operator == "/" {
 			result = operand1 * operand2
 			buffer = removeElement(buffer, 0)
 			buffer = removeElement(buffer, 0)
 			buffer = removeElement(buffer, 0)
-			e := strconv.Itoa(result)
+			e := strconv.FormatFloat(result, 'f', 2, 64)
 			buffer = insertElement(buffer, e, 0)
 		} else if operator == "+"  || operator == "-" {
 			i += 2
@@ -75,22 +75,22 @@ func calculateMathOperation(input string) string {
 		
 		// check for additional operation
 		for i < len(buffer) - 2 {
-			operand3, _ := strconv.Atoi(buffer[i])
+			operand3, _ := strconv.ParseFloat(buffer[i], 64)
 			op := buffer[i+1]
-			operand4, _ := strconv.Atoi(buffer[i+2])
+			operand4, _ := strconv.ParseFloat(buffer[i+2], 64)
 			if op == "*" {
 				result = operand3 * operand4
 				buffer = removeElement(buffer, i) 
 				buffer = removeElement(buffer, i) 
 				buffer = removeElement(buffer, i)
-				e := strconv.Itoa(result)
+				e := strconv.FormatFloat(result, 'f', 2, 64)
 				buffer = insertElement(buffer, e, i)
 			} else if op == "/" {
 				result = operand3 / operand4
 				buffer = removeElement(buffer, i) 
 				buffer = removeElement(buffer, i)
 				buffer = removeElement(buffer, i)
-				e := strconv.Itoa(result)
+				e := strconv.FormatFloat(result, 'f', 2, 64)
 				buffer = insertElement(buffer, e, i)
 			} else if op == "+" {
 				i += 2
@@ -103,9 +103,9 @@ func calculateMathOperation(input string) string {
 
 	// check for remaining addition and substraction operation
 	if len(buffer) >= 3 {
-		operand1, _ := strconv.Atoi(buffer[0])
+		operand1, _ := strconv.ParseFloat(buffer[0], 64)
 		operator := buffer[1]
-		operand2, _ := strconv.Atoi(buffer[2])
+		operand2, _ := strconv.ParseFloat(buffer[2], 64)
 
 		switch operator {
 		case "+":
@@ -121,7 +121,7 @@ func calculateMathOperation(input string) string {
 		// check for additional operation
 		for i := 3; i < len(buffer); i+=2 {
 			op := buffer[i]
-			operand3, _ := strconv.Atoi(buffer[i+1])
+			operand3, _ := strconv.ParseFloat(buffer[i+1], 64)
 			switch op {
 			case "+":
 				result += operand3
@@ -137,7 +137,7 @@ func calculateMathOperation(input string) string {
 	}
 
 
-	return strconv.Itoa(result)
+	return strconv.FormatFloat(result, 'f', 2, 64)
 }
 
 func removeElement(arr []string, index int) []string {

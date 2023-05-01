@@ -1,13 +1,83 @@
 .main{
     background-color: whitesmoke;
+    margin: 0px 0px;
 }
 
-.chatbox{
-    position: absolute;
-    top: 5%;
-    bottom: 10%;
-    left: 17%;
-    right: 5%;
-    background-color: aquamarine;
-    transition: opacity 0.5s ease-in-out;
+.main >:first-child {
+    display: flex;
+    flex: 1 auto;
+    justify-content: center;
+    position: relative;
 }
+
+.chatbox {
+    position: relative;
+    margin: auto;
+    left: 0%;
+    top: 10%;
+    height: 850px;
+    margin-bottom: 100px;
+    width: 1400px;
+    background-color: rgb(136, 136, 136, 0.1);
+    transition: opacity 0.5s ease-in-out;
+    padding: 10px 10px;
+    overflow: auto;
+}
+
+.form{
+    position: absolute;
+    left: 40%;
+    bottom: 3%;
+    flex: 5;
+    
+}
+
+.flex_container {
+  display: flex;
+  flex: 1 auto;
+  justify-content: center;
+  position: relative;
+}
+
+.form{
+    left: 10%;
+}
+
+.qblock {
+   height: 100px;
+}
+
+.qblock > :first-child{
+    position: absolute;
+    right: 5%;
+    display: flex;
+}
+
+.qblock > :first-child > span{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    font-size: 26px;
+    font-weight: bold;
+    font-family: OUTFIT; 
+}
+
+.ablock {
+    height: 100px;
+ }
+ 
+.ablock > :first-child{
+     position: absolute;
+     display: flex;
+ }
+ 
+ .ablock > :first-child > span{
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+     padding: 10px;
+     font-size: 26px;
+     font-weight: bold;
+     font-family: OUTFIT; 
+ }
