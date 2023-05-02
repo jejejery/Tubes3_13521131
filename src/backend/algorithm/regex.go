@@ -78,14 +78,24 @@ func CheckQuestion(input string, ansArray []string) []string {
 		matches := re.FindStringSubmatch(input)
 		input = strings.Replace(input, matches[0], "", 1)
 	} else if isAddingQNAToDatabase(input) {
-		pattern := `[tT][aA][mM][bB][aA][hH][kK][aA][nN]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*\s*[dD][eE][nN][gG][aA][nN]\s*[jJ][aA][wW][aA][bB][aA][nN].*\n+(.+)`
+		pattern := `[tT][aA][mM][bB][aA][hH][kK][aA][nN]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*\s*[dD][eE][nN][gG][aA][nN]\s*[jJ][aA][wW][aA][bB][aA][nN].*\n*`
 		re := regexp.MustCompile(pattern)
 		if re.MatchString(input) {
 			input = re.ReplaceAllString(input, "$1");
 		} else {
 			input = ""
 		}
-	}  else {
+	} else if isErasingQuestion(input) {
+		pattern := `[hH][aA][pP][uU][sS]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN].*\n*$`
+		re := regexp.MustCompile(pattern)
+		matches := re.FindStringSubmatch(input)
+		if re.MatchString(input) {
+			input = re.ReplaceAllString(input, "$1");
+		} else {
+			input = ""
+		}
+		ansArray = append(ansArray, matches[0])
+	} else {
 		pattern := 	`.*\s*\n*`
 		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)	
