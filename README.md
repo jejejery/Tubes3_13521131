@@ -1,8 +1,8 @@
-# Tucil_3_IF2211
+# Tubes_3_IF2211
 Chat-GPT "Chatty Loli"
 
 <p align="center">
-  <img src="etc/chatty-loli.jpg" title="chatty loli">
+  <img src="etc/chatty-loli.png" title="chatty loli">
 </p>
 
 ## Prereq
