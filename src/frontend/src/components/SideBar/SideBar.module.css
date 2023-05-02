@@ -4,7 +4,6 @@
 
   .history {
     line-height: 40px;
-    background-color: aliceblue;
     width: 200px;
     height: 450px;
     overflow: scroll;
@@ -12,9 +11,17 @@
   }
 
   .history ul {
-    list-style: disc;
-    list-style-color: lightblue;
-    color: purple;
+    list-style: none;
+    color: 'purple';
+  }
+
+  .history ul li {
+
+    background-color: rgba(128, 128, 128, 0.3);
+    color: 'white';
+    font-size: 26px;
+     font-weight: bold;
+     font-family: OUTFIT; 
   }
   
   .history a {
@@ -23,3 +30,4 @@
     color: palevioletred;
     text-decoration: none;
   }
+

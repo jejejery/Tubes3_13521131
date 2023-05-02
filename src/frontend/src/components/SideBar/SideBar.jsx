@@ -4,8 +4,9 @@ import {CDBSidebar,
     CDBSidebarFooter,
     CDBSidebarHeader,
     CDBSidebarMenu,
-    CDBSidebarMenuItem,} from 'cdbreact';
+    CDBSidebarMenuItem} from 'cdbreact';
 import { NavLink } from 'react-router-dom';
+import { Button } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import { Planet } from 'react-kawaii';
@@ -20,7 +21,10 @@ class SideBar extends React.Component {
       super(props);
       this.state = {
       isKMP : false,
-      isBM : false
+      isBM : false,
+      showHistory: true,
+      history : [],
+      // historyIdx: 0
         };
     }
 
@@ -39,29 +43,42 @@ class SideBar extends React.Component {
       if(!this.state.isBM)this.props.handleAlgoChange({target: {value: 2}});
       else this.props.handleAlgoChange({target: {value: 0}});
     }
-
-    render_history(){
-      return(
-        <div class={styles.history}>
-          <ul>
-            <li><a href="/MainGPT">Histori 1</a></li>
-            <li><a href="/MainGPT">Histori 2</a></li>
-            <li><a href="/MainGPT">Histori 3</a></li>
-          </ul>
-        </div>
-
-
-        
-      )
+    addHistory = (e) =>{
+      e.preventDefault()
+      let temp = this.state.history
+      if(temp.length < 10){
+        temp.push(temp.length+1)
+      }
+      // else{
+      //   temp[this.state.historyIdx % 10] += 10
+      // }
+      // this.setState({historyIdx:this.state.historyIdx+1 })
+      this.setState({history: temp})
     }
 
-
+    render_history() {
+      let historyItems = [];
+      for (let i = 0; i < this.state.history.length; i++) {
+        let historyCode = "History " + ('0' + this.state.history[i]).slice(-2); // format nomor menjadi H01, H02, dst.
+        historyItems.push(<li color='purple' onClick={() => console.log(historyCode)}>{historyCode}</li>);
+      }
+      return (
+        <div className={styles.history}>
+          <ul>
+            {historyItems}
+          </ul>
+        </div>
+      );
+    }
+    
     render() { 
+        //Todo: get history id from database:
+
         return(
                 <div style={{ display: 'fixed', height: '100vh'}}>
                   <CDBSidebar textColor="#fff" backgroundColor="#B2A4FF">
                     <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>
-                      <a href="/" className="text-decoration-none" style={{ color: 'inherit' ,display: 'flex',alignItems: 'center', padding: '20px 0px',}}>
+                      <a href="/" className="text-decoration-none" style={{ color: 'inherit' ,display: 'flex',alignItems: 'center', padding: '20px 0px',}} >
                       <Planet size={80} mood="blissful" color="#FDA7DC" />&nbsp;&nbsp;&nbsp; Chatty-Loli
                       </a>
                     </CDBSidebarHeader>
@@ -70,16 +87,20 @@ class SideBar extends React.Component {
                       <CDBSidebarMenu>                       
                           <CDBSidebarMenuItem icon="history" >History</CDBSidebarMenuItem>
                       </CDBSidebarMenu>
-                      {this.render_history()}
+                      <CDBSidebarMenu style ={{marginTop:'170px'}}> 
+                         <CDBSidebarMenuItem >{this.render_history()}</CDBSidebarMenuItem>
+                      </CDBSidebarMenu>
+                      <Button key={Math.random()} type = "submit" style = {{height: '40px', width:'100px', marginTop: '200px'}} onClick = {this.addHistory} > +Add </Button>
                     </CDBSidebarContent>
-            
+
+                    
                     <CDBSidebarFooter style={{ textAlign: 'center' , alignItems: 'center' }}>
                       <div
                         style={{
                           position : 'relative',
-                          bottom : '20%',
+                          bottom : '0%',
                           display: 'inline-block',
-                          padding: '40px 20px',
+                          padding: '20px 20px',
                         
                         }}
                       >
@@ -97,7 +118,7 @@ class SideBar extends React.Component {
                       </div>
                     </CDBSidebarFooter>
                   </CDBSidebar>
-
+                  
                 </div>
               );
      }
