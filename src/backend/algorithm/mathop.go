@@ -8,6 +8,40 @@ import (
 
 func calculateMathOperation(input string) string {
 	// matharray := regexp.MustCompile(`(-?\d+)\s*([-+*\/])\s*(-?\d+)((?:\s*([-+*\/])\s*(-?\d+))+)`)
+	// matharray := regexp.MustCompile(`(\d+|\(|\)|\^\s*|\*\s*|/\s*|\+\s*|-)`)
+	// matcharray := matharray.FindAllStringSubmatch(input, -1)
+
+	// buffer := make([]string, len(matcharray))
+	// counter := 0
+	// for _, match := range matcharray {
+	// 	if match[1] != " " {
+	// 		buffer[counter] = match[1]
+	// 		counter++
+	// 	}
+	// }
+
+	// for i := 0; i < len(buffer); i++ {
+	// 	if buffer[i] == "(" {
+	// 		parentCount := 1 
+	// 		j := i + 1
+	// 		for ; j < len(buffer); j++ {
+	// 			if (buffer[j] == "(") {
+	// 				parentCount++
+	// 			} else if (buffer[j] == ")") {
+	// 				parentCount--
+	// 			}
+	// 			if parentCount == 0 {
+	// 				break
+	// 			}
+	// 		}
+	// 		subExpr := strings.Join(buffer[i+1:j], "")
+	// 		subResult := calculateMathOperation2(subExpr)
+	// 		buffer[i] = subResult
+	// 		buffer = append(buffer[:i+1], buffer[j+1:]...)
+	// 		i--
+	// 	}	
+	// }
+
 	matharray := regexp.MustCompile(`(\d+)\s{0,}([\^\-\+\*\/]|)`)
 	
 	matcharray := matharray.FindAllStringSubmatch(input, -1)
