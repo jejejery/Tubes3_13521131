@@ -3,11 +3,12 @@ package algorithm
 import (
 	"regexp"
 	"strconv"
+	"math"
 )
 
 func calculateMathOperation(input string) string {
 	// matharray := regexp.MustCompile(`(-?\d+)\s*([-+*\/])\s*(-?\d+)((?:\s*([-+*\/])\s*(-?\d+))+)`)
-	matharray := regexp.MustCompile(`(\d+)\s{0,}([-+*\/]|)`)
+	matharray := regexp.MustCompile(`(\d+)\s{0,}([\^\-\+\*\/]|)`)
 	
 	matcharray := matharray.FindAllStringSubmatch(input, -1)
 	
@@ -31,7 +32,7 @@ func calculateMathOperation(input string) string {
 	var result float64
 
 	// evaluate the multiplication and division first
-		
+
 	if len(buffer) == 3 {
 		operand1, _ := strconv.ParseFloat(buffer[0], 64)
 		operator := buffer[1]
@@ -49,8 +50,49 @@ func calculateMathOperation(input string) string {
 		case "/":
 			result = operand1 / operand2
 			return strconv.FormatFloat(result, 'f', 2, 64)
+		case "^":
+			result = math.Pow(operand1, operand2)
+			return strconv.FormatFloat(result, 'f', 2, 64) 
 		}
 	} else {
+		i := 0
+		operand1, _ := strconv.ParseFloat(buffer[0], 64)
+		operator := buffer[1]
+		operand2, _ := strconv.ParseFloat(buffer[2], 64)
+		if operator == "^" {
+			result = math.Pow(operand1, operand2)
+			buffer = removeElement(buffer, 0)
+			buffer = removeElement(buffer, 0)
+			buffer = removeElement(buffer, 0)
+			e := strconv.FormatFloat(result, 'f', 2, 64)
+			buffer = insertElement(buffer, e, 0)
+		} else if operator == "+"  || operator == "-" || operator == "*" || operator == "/" {
+			i += 2
+		}
+
+		// check for additional operation
+		for i < len(buffer) - 2 {
+			operand3, _ := strconv.ParseFloat(buffer[i], 64)
+			op := buffer[i+1]
+			operand4, _ := strconv.ParseFloat(buffer[i+2], 64)
+			if op == "^" {
+				result = math.Pow(operand3, operand4)
+				buffer = removeElement(buffer, i)
+				buffer = removeElement(buffer, i)
+				buffer = removeElement(buffer, i)
+				e := strconv.FormatFloat(result, 'f', 2, 64)
+				buffer = insertElement(buffer, e, i)
+			} else if op == "+" || op == "-" || op == "*" || op == "/" {
+				i += 2
+			} else {
+				i += 2
+			}
+			
+		}
+	}
+
+
+	if len(buffer) >= 3 {
 		i := 0
 		operand1, _ := strconv.ParseFloat(buffer[0], 64)
 		operator := buffer[1]
