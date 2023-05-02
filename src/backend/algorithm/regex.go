@@ -80,6 +80,8 @@ func CheckQuestion(input string, ansArray []string) []string {
 	} else if isAddingQNAToDatabase(input) {
 		pattern := `[tT][aA][mM][bB][aA][hH][kK][aA][nN]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*\s*[dD][eE][nN][gG][aA][nN]\s*[jJ][aA][wW][aA][bB][aA][nN].*\n*`
 		re := regexp.MustCompile(pattern)
+		matches := re.FindStringSubmatch(input)
+		ansArray = append(ansArray, matches[0])
 		if re.MatchString(input) {
 			input = re.ReplaceAllString(input, "$1");
 		} else {
