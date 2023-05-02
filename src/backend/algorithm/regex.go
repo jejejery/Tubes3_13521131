@@ -81,7 +81,11 @@ func CheckQuestion(input string, ansArray []string) []string {
 		pattern := `[tT][aA][mM][bB][aA][hH][kK][aA][nN]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*\s*[dD][eE][nN][gG][aA][nN]\s*[jJ][aA][wW][aA][bB][aA][nN].*\n*`
 		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)
-		ansArray = append(ansArray, matches[0])
+		matches_clean := strings.Replace(matches[0], "\n", "", -1)
+		if strings.HasSuffix(matches_clean, " ") {
+			matches_clean = strings.TrimRight(matches_clean, " ")
+		}
+		ansArray = append(ansArray, matches_clean)
 		if re.MatchString(input) {
 			input = re.ReplaceAllString(input, "$1");
 		} else {
@@ -91,17 +95,25 @@ func CheckQuestion(input string, ansArray []string) []string {
 		pattern := `[hH][aA][pP][uU][sS]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN].*\n*$`
 		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)
+		matches_clean := strings.Replace(matches[0], "\n", "", -1)
+		if strings.HasSuffix(matches_clean, " ") {
+			matches_clean = strings.TrimRight(matches_clean, " ")
+		}
+		ansArray = append(ansArray, matches_clean)
 		if re.MatchString(input) {
 			input = re.ReplaceAllString(input, "$1");
 		} else {
 			input = ""
 		}
-		ansArray = append(ansArray, matches[0])
 	} else {
 		pattern := 	`.*\s*\n*`
 		re := regexp.MustCompile(pattern)
-		matches := re.FindStringSubmatch(input)	
-		ansArray = append(ansArray, matches[0])
+		matches := re.FindStringSubmatch(input)
+		matches_clean := strings.Replace(matches[0], "\n", "", -1)
+		if strings.HasSuffix(matches_clean, " ") {
+			matches_clean = strings.TrimRight(matches_clean, " ")
+		}
+		ansArray = append(ansArray, matches_clean)
 		input = strings.Replace(input, matches[0], "", 1)
 		return CheckQuestion(input, ansArray)
 	}
