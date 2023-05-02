@@ -14,9 +14,8 @@
     position: relative;
     margin: auto;
     left: 0%;
-    top: 10%;
-    height: 850px;
-    margin-bottom: 100px;
+    bottom: 50px;
+    height: 750px;
     width: 1400px;
     background-color: rgb(136, 136, 136, 0.1);
     transition: opacity 0.5s ease-in-out;
@@ -26,7 +25,7 @@
 
 .form{
     position: absolute;
-    left: 40%;
+    margin-left: 40%;
     bottom: 3%;
     flex: 5;
     
@@ -39,12 +38,9 @@
   position: relative;
 }
 
-.form{
-    left: 10%;
-}
 
 .qblock {
-   height: 100px;
+   height: 150px;
 }
 
 .qblock > :first-child{
@@ -54,6 +50,7 @@
 }
 
 .qblock > :first-child > span{
+    display: block;
     flex-direction: column;
     justify-content: center;
     align-items: center;

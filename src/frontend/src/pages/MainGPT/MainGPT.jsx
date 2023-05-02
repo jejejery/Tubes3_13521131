@@ -17,8 +17,11 @@ class MainGPT extends React.Component {
       this.myQuestion = React.createRef(); // membuat ref
       this.state = {        
         algo : 0,//algo code: 0 is null, 1 is KMP, and 2 is BM
-        qaBlocks : []
+        qaBlocks : [],
+        formRows: 1
       };
+      this.handleKeyPress = this.handleKeyPress.bind(this)
+      this.setState = this.setState.bind(this)
       
     }
     handleAlgoChange = (event) =>{
@@ -84,6 +87,11 @@ class MainGPT extends React.Component {
       //reset the question
       this.myQuestion.current.value = ""
     }
+    handleKeyPress(event) {
+      if (event.key == 'Enter') {
+        if(this.state.formRows < 3) this.setState({ formRows: this.state.formRows+1 });
+      }
+    }
     
     render_q_block(question,answer){
       return (
@@ -91,7 +99,7 @@ class MainGPT extends React.Component {
           <div class = {styles.qblock}>
             <div >
               <SpeechBubble size={80} mood="excited" color="rgb(90, 88, 177)" /> 
-              <span>{question}</span>
+              <span dangerouslySetInnerHTML={{__html: question.replace(/\n/g, '<br>') }} />
             </div>
           </div>
 
@@ -112,31 +120,34 @@ class MainGPT extends React.Component {
 
 
       return (
-      
-      <div className={styles.main}>
+        <div className={styles.main}>
         <div style={styles.first}>
           <SideBar style={{ margin: '0 10px' }} handleAlgoChange= {this.handleAlgoChange} />
           <div className={styles.chatbox}>
             {this.state.qaBlocks}
           </div>
-          <div style={{ left: '30%', bottom: '3%', flex: 5, position: 'absolute', borderColor:'black'}}>
+          <div style={{  left: '30%', bottom: '3%', flex: 5, position: 'absolute', borderColor:'black'}}>
             <Form onSubmit = {this.handleSubmit}>
-            {/* <Form.Group controlId="formMessage"> */}
+            <Form.Group className="mb-3" controlId="formMessage">
               <div style = {{display: 'flex', alignItems: 'flex-end', position: 'absolute', bottom: '2%', width: '100'}}>
                 <Form.Control
                 type="text"
+                as="textarea"
                 placeholder="Send a message..."
                 onChange={this.handleReadText}
                 ref = {this.myQuestion}
-                style={{ fontSize: '24px', marginLeft: '-15%', marginRight: '0px', width: '1400px'}}
+                onKeyPress={this.handleKeyPress}
+                rows = {this.state.formRows}
+                style={{ fontSize: '24px', marginLeft: '-15%', marginRight: '0px', width: '1400px',}}
                 />
                 <Button type = "submit" style = {{marginLeft: '5px', height: '50px'}} disabled={this.state.algo == 0}> send </Button>
               </div>
-            {/* </Form.Group> */}
+            </Form.Group>
             </Form>
          </div>
        </div>
       </div>
+      
             );
      }
 }
