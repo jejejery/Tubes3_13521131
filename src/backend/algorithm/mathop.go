@@ -44,6 +44,10 @@ func calculateMathOperation(input string) string {
 		}	
 	}
 
+	if (len(buffer) < 3) {
+		return buffer[0]
+	}
+
 
 	if len(buffer) == 3 {
 		operand1, _ := strconv.ParseFloat(buffer[0], 64)
@@ -103,6 +107,9 @@ func calculateMathOperation(input string) string {
 		}
 	}
 
+	if (len(buffer) < 3) {
+		return buffer[0]
+	}
 
 	if len(buffer) >= 3 {
 		i := 0
@@ -153,6 +160,10 @@ func calculateMathOperation(input string) string {
 			}
 			
 		}
+	}
+
+	if (len(buffer) < 3) {
+		return buffer[0]
 	}
 
 	// check for remaining addition and substraction operation
