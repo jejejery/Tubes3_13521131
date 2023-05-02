@@ -101,6 +101,7 @@ func CheckQuestion(input string, ansArray []string) []string {
 		pattern := 	`.*\s*\n*`
 		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)	
+		ansArray = append(ansArray, matches[0])
 		input = strings.Replace(input, matches[0], "", 1)
 		return CheckQuestion(input, ansArray)
 	}
