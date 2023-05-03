@@ -18,7 +18,8 @@ class MainGPT extends React.Component {
       this.state = {        
         algo : null,//true : kmp, false: bm
         qaBlocks : [],
-        formRows: 1
+        formRows: 1,
+        answer: ""
       };
       this.handleKeyPress = this.handleKeyPress.bind(this)
       this.setState = this.setState.bind(this)
@@ -43,46 +44,27 @@ class MainGPT extends React.Component {
         Algorithm: this.state.algo,
       };
       console.log(data)
+      await axios.post("http://localhost:8000/api/input", data)
+      .then(response => {
+        let temp = this.state.qaBlocks
+        temp.push(this.render_q_block(this.myQuestion.current.value,response.data.Answer))
+        this.setState({qaBlocks: temp})
+        this.setState({answer : response.data.Answer})
+ 
+        }
+      )
+      .catch(error =>{
+        console.log(error);
+      })
 
       //insert into array
-      let temp = this.state.qaBlocks
-      temp.push(this.render_q_block(this.myQuestion.current.value,"belum adaaaa hehe :v"))
-      this.setState({qaBlocks: temp})
+
       
       
       //try-catch
       
       
-      await axios.post("http://localhost:8000/api/input", data)
-        .then(response => {
-          this.setState({answer : response.data.result})
 
-          console.log(data.Input);
-          // const pattern1 = /tambahkan pertanyaan (.+) dengan jawaban (.+)/i;
-          // const pattern2 = /hapus pertanyaan (.+)/i;
-          // const matches1 = data.Input.match(pattern1);
-          // const matches2 = data.Input.match(pattern2);
-          // if(matches1){
-          //   // todo: question is available
-          //   const newQna = {
-          //     Question: matches1[1],
-          //     Answer : matches1[2],
-          //   }
-          //     axios.post("http://localhost:8000/api/qna", newQna);
-          // }
-          // else if(matches2){
-          //   const deleteQna = {
-          //     Question: matches2[1],
-          //     Answer: "",
-          //   }
-          //   axios.delete("http://localhost:8000/api/qna", {data: deleteQna});
-          // }
-   
-          }
-        )
-        .catch(error =>{
-          console.log(error);
-        })
         
       //reset the question
       this.myQuestion.current.value = ""

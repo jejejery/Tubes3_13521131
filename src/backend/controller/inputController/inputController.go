@@ -199,8 +199,6 @@ func Create(c *fiber.Ctx) error {
 	return c.JSON(newInput)
 }
 
-
-
 func Delete(c *fiber.Ctx) error {
 	id := c.Params("question")
 
