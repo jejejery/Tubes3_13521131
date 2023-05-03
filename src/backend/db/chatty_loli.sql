@@ -84,7 +84,7 @@ INSERT INTO `input_users` (`id`, `input_text`, `algorithm`, `answer`) VALUES
 (31, 'Tambahkan pertanyaan aaaaa dengan jawaban bbbb', 1, 'adding'),
 (32, 'hai yorobun', 1, ''),
 (33, '2+5*3/2', 1, '9'),
-(34, '29/04/2023', 1, 'Sabtu'),
+(34, '29/04/2023', 1, 'Sabtu'), 
 (35, '31/04/2023', 1, 'Senin'),
 (36, '-1/04/2023', 1, '0'),
 (37, '32/04/2023', 1, 'Selasa'),
