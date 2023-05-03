@@ -144,7 +144,7 @@ func Create(c *fiber.Ctx) error {
 					println(index)
 					println(similarityTemp)
 
-					if index == -1 && similarityTemp < 90 {
+					if index == -1 {
 						nonMatchStringQuestion = qnas[j].Question
 						nonMatchStringAnswer = qnas[j].Answer
 						similarityNonMatch = float64(similarityTemp)
@@ -162,7 +162,7 @@ func Create(c *fiber.Ctx) error {
 					qnaTemp := strings.ReplaceAll(qnas[j].Question, " ", "")
 					index, similarityTemp := algorithm.BMMatch(inputTemp, qnaTemp)
 
-					if index == -1 && similarityTemp < 90 {
+					if index == -1 {
 						nonMatchStringQuestion = qnas[j].Question
 						nonMatchStringAnswer = qnas[j].Answer
 						similarityNonMatch = float64(similarityTemp)
@@ -182,14 +182,18 @@ func Create(c *fiber.Ctx) error {
 				sort.Slice(nonMatchStrings, func(i, j int) bool {
 					return nonMatchStrings[i].similarityPercentage > nonMatchStrings[j].similarityPercentage
 				})
-				answer += "Pertanyaan tidak ditemukan di database.\n"
-				answer += "Apakah maksud anda: \n"
-				for i := 1; i <= 3; i++ {
-					answer += (string(i) + ". " + nonMatchStrings[i].nonMatchStringQuestion + "\n")
+				if nonMatchStrings[0].similarityPercentage > 90 {
+					answer += nonMatchStrings[0].nonMatchStringAnswer
+				} else {
+					answer += "Pertanyaan tidak ditemukan di database.\n"
+					answer += "Apakah maksud anda: \n"
+					for i := 1; i <= 3; i++ {
+						answer += (strconv.Itoa(i) + ". " + nonMatchStrings[i-1].nonMatchStringQuestion + "\n")
+
+					}
 				}
 			}
 		}
-
 	}
 	newInput := model.InputUser{Session: input.Session, InputText: input.Input, Algorithm: input.Algorithm, Answer: answer}
 	if err := database.DB.Create(&newInput).Error; err != nil {
