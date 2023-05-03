@@ -16,13 +16,15 @@ class MainGPT extends React.Component {
 
       this.myQuestion = React.createRef(); // membuat ref
       this.state = {        
-        algo : 0,//algo code: 0 is null, 1 is KMP, and 2 is BM
+        algo : null,//true : kmp, false: bm
         qaBlocks : [],
-        formRows: 1
+        formRows: 1,
+        answer: "",
+        startSession: Date.now()
       };
       this.handleKeyPress = this.handleKeyPress.bind(this)
       this.setState = this.setState.bind(this)
-      
+
     }
     handleAlgoChange = (event) =>{
       this.setState({algo: event.target.value})
@@ -31,58 +33,45 @@ class MainGPT extends React.Component {
       this.myQuestion.current.value = event.target.value;
       
     }
+    handleNewSession = (event) => {
+      this.setState({startSession: event.target.value})
+  
+    }
     handleSubmit = async (event) => {
       event.preventDefault()
       console.log(this.myQuestion.current.value)
       console.log(this.state.algo)
+      console.log(this.state.startSession)
 
 
       const data = {
-
-        InputText :this.myQuestion.current.value,
-        Algorithm: this.state.algo,
+        Session: this.state.startSession,
+        Input :this.myQuestion.current.value,
+        Algorithm: this.state.algo
+        
       };
-      
+      console.log(data)
+      await axios.post("http://localhost:8000/api/input", data)
+      .then(response => {
+        let temp = this.state.qaBlocks
+        temp.push(this.render_q_block(this.myQuestion.current.value,response.data.Answer))
+        this.setState({qaBlocks: temp})
+        this.setState({answer : response.data.Answer})
+ 
+        }
+      )
+      .catch(error =>{
+        console.log(error);
+      })
 
       //insert into array
-      let temp = this.state.qaBlocks
-      temp.push(this.render_q_block(this.myQuestion.current.value,"belum adaaaa hehe :v"))
-      this.setState({qaBlocks: temp})
+
       
       
       //try-catch
       
       
-      await axios.post("http://localhost:8000/api/input", data)
-        .then(response => {
-          this.setState({answer : response.data.result})
 
-          console.log(data.Input);
-          const pattern1 = /tambahkan pertanyaan (.+) dengan jawaban (.+)/i;
-          const pattern2 = /hapus pertanyaan (.+)/i;
-          const matches1 = data.Input.match(pattern1);
-          const matches2 = data.Input.match(pattern2);
-          if(matches1){
-            // todo: question is available
-            const newQna = {
-              Question: matches1[1],
-              Answer : matches1[2],
-            }
-              axios.post("http://localhost:8000/api/qna", newQna);
-          }
-          else if(matches2){
-            const deleteQna = {
-              Question: matches2[1],
-              Answer: "",
-            }
-            axios.delete("http://localhost:8000/api/qna", {data: deleteQna});
-          }
-   
-          }
-        )
-        .catch(error =>{
-          console.log(error);
-        })
         
       //reset the question
       this.myQuestion.current.value = ""
@@ -122,7 +111,7 @@ class MainGPT extends React.Component {
       return (
         <div className={styles.main}>
         <div style={styles.first}>
-          <SideBar style={{ margin: '0 10px' }} handleAlgoChange= {this.handleAlgoChange} />
+          <SideBar style={{ margin: '0 10px' }} handleAlgoChange= {this.handleAlgoChange} handleNewSession= {this.handleNewSession}/>
           <div className={styles.chatbox}>
             {this.state.qaBlocks}
           </div>
@@ -140,7 +129,7 @@ class MainGPT extends React.Component {
                 rows = {this.state.formRows}
                 style={{ fontSize: '24px', marginLeft: '-15%', marginRight: '0px', width: '1400px',}}
                 />
-                <Button type = "submit" style = {{marginLeft: '5px', height: '50px'}} disabled={this.state.algo == 0}> send </Button>
+                <Button type = "submit" style = {{marginLeft: '5px', height: '50px'}} disabled={this.state.algo == null}> send </Button>
               </div>
             </Form.Group>
             </Form>

@@ -4,34 +4,50 @@ import (
 	"regexp"
 	"strconv"
 	"math"
+	"strings"
 )
 
 func calculateMathOperation(input string) string {
-	// matharray := regexp.MustCompile(`(-?\d+)\s*([-+*\/])\s*(-?\d+)((?:\s*([-+*\/])\s*(-?\d+))+)`)
-	matharray := regexp.MustCompile(`(\d+)\s{0,}([\^\-\+\*\/]|)`)
-	
+	matharray := regexp.MustCompile(`(\d+|\(|\)|\^\s*|\*\s*|/\s*|\+\s*|-)`)
 	matcharray := matharray.FindAllStringSubmatch(input, -1)
-	
-	buffer := make([]string, 2*(len(matcharray)-1) + 1)
+
+	buffer := make([]string, len(matcharray))
 	counter := 0
-	counterMatch := 0
 	for _, match := range matcharray {
-		if (counterMatch == len(matcharray)-1) {
+		if match[1] != " " {
 			buffer[counter] = match[1]
- 		} else {
-			if len(match) >= 3 {
-				for i := 1; i < len(match); i++ {
-					buffer[counter] = match[i]
-					counter++
-				}
-				counterMatch++
-			}
+			counter++
 		}
 	}
-	
+
 	var result float64
 
-	// evaluate the multiplication and division first
+	for i := 0; i < len(buffer); i++ {
+		if buffer[i] == "(" {
+			parentCount := 1 
+			j := i + 1
+			for ; j < len(buffer); j++ {
+				if (buffer[j] == "(") {
+					parentCount++
+				} else if (buffer[j] == ")") {
+					parentCount--
+				}
+				if parentCount == 0 {
+					break
+				}
+			}
+			subExpr := strings.Join(buffer[i+1:j], "")
+			subResult := calculateMathOperation(subExpr)
+			buffer[i] = subResult
+			buffer = append(buffer[:i+1], buffer[j+1:]...)
+			i--
+		}	
+	}
+
+	if (len(buffer) < 3) {
+		return buffer[0]
+	}
+
 
 	if len(buffer) == 3 {
 		operand1, _ := strconv.ParseFloat(buffer[0], 64)
@@ -91,6 +107,9 @@ func calculateMathOperation(input string) string {
 		}
 	}
 
+	if (len(buffer) < 3) {
+		return buffer[0]
+	}
 
 	if len(buffer) >= 3 {
 		i := 0
@@ -141,6 +160,10 @@ func calculateMathOperation(input string) string {
 			}
 			
 		}
+	}
+
+	if (len(buffer) < 3) {
+		return buffer[0]
 	}
 
 	// check for remaining addition and substraction operation

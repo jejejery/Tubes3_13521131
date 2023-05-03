@@ -1,8 +1,12 @@
 package inputcontroller
 
 import (
+	"bytes"
+	"encoding/json"
 	"net/http"
+	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -37,7 +41,9 @@ func Show(c *fiber.Ctx) error {
 }
 
 func Create(c *fiber.Ctx) error {
+
 	var input struct {
+		Session   int64  `json:"Session"`
 		Input     string `json:"Input"`
 		Algorithm bool   `json:"Algorithm"`
 	}
@@ -47,84 +53,149 @@ func Create(c *fiber.Ctx) error {
 			"message": "Bad request!!",
 		})
 	}
-	answer := algorithm.CheckQuestion(input.Input)
-	if answer == "" {
-		var qnas []model.QnA
-		database.DB.Find(&qnas)
-		isMatch := false
-		// save similarity match for match n non match pattern so far
-		matchAnswerString := ""
-		similarityMatch := 0.0
-		similarityNonMatch := 0.0
-		nonMatchStringQuestion := ""
-		nonMatchStringAnswer := ""
-		type stringSimilarity struct {
-			nonMatchStringQuestion string
-			nonMatchStringAnswer   string
-			similarityPercentage   float64
-		}
-		var nonMatchStrings []stringSimilarity
-		n := len(qnas)
-		for i := 0; i < n; i++ {
-			if input.Algorithm {
-				// kmp
-				println("test")
-				println(input.Input)
-				println(qnas[i].Question)
-				var x string = input.Input
-				var y string = qnas[i].Question
-				index, similarityTemp := algorithm.KMPMatch(x, y)
-				println(index)
-				println(similarityTemp)
 
-				if index == -1 && similarityTemp < 90 {
-					nonMatchStringQuestion = qnas[i].Question
-					nonMatchStringAnswer = qnas[i].Answer
-					similarityNonMatch = float64(similarityTemp)
-					newTuple := stringSimilarity{nonMatchStringQuestion, nonMatchStringAnswer, similarityNonMatch}
-					nonMatchStrings = append(nonMatchStrings, newTuple)
-				}
-				if index != -1 && similarityTemp >= 90 && similarityTemp > float32(similarityMatch) {
-					matchAnswerString = qnas[i].Answer
-					isMatch = true
-				}
-			} else {
-				// bm
-				inputTemp := strings.ReplaceAll(input.Input, " ", "")
+	var answer string     // answer to return
+	var ansArray []string // temp answer from checkQuestion
+	ansArray = algorithm.CheckQuestion(input.Input, ansArray)
+	for i := 0; i < len(ansArray); i++ {
+		println(ansArray[i])
+	}
+	println("cek")
 
-				qnaTemp := strings.ReplaceAll(qnas[i].Question, " ", "")
-				index, similarityTemp := algorithm.BMMatch(inputTemp, qnaTemp)
-
-				if index == -1 && similarityTemp < 90 {
-					nonMatchStringQuestion = qnas[i].Question
-					nonMatchStringAnswer = qnas[i].Answer
-					similarityNonMatch = float64(similarityTemp)
-					newTuple := stringSimilarity{nonMatchStringQuestion, nonMatchStringAnswer, similarityNonMatch}
-					nonMatchStrings = append(nonMatchStrings, newTuple)
-				}
-				if index != -1 && similarityTemp >= 90 && similarityTemp > float32(similarityMatch) {
-					matchAnswerString = qnas[i].Answer
-					isMatch = true
-				}
+	// database.DB.Find(&qnas)
+	for i := 0; i < len(ansArray); i++ {
+		_, err := strconv.ParseFloat(ansArray[i], 64)
+		if err == nil || ansArray[i] == "Sintaks persamaan tidak valid!" {
+			answer += ansArray[i]
+		} else if algorithm.IsDayOutput(ansArray[i]) {
+			answer += ansArray[i]
+		} else if algorithm.IsAddingQNAToDatabase(ansArray[i]) {
+			var newQnA model.QnA
+			pattern := `(?i)Tambahkan pertanyaan (.+) dengan jawaban (.+)`
+			regex := regexp.MustCompile(pattern)
+			matches := regex.FindStringSubmatch(ansArray[i])
+			newQnA.Question = matches[1]
+			newQnA.Answer = matches[2]
+			jsonStr, err := json.Marshal(newQnA)
+			if err != nil {
+				// return err
 			}
-		}
-		if isMatch {
-			answer = matchAnswerString
+			req, err := http.NewRequest("POST", "http://localhost:8000/api/qna", bytes.NewBuffer((jsonStr)))
+			if err != nil {
+				return err
+			}
+			req.Header.Set("Content-Type", "application/json")
+			client := &http.Client{}
+			resp, err := client.Do(req)
+			if err != nil {
+				return err
+			}
+			defer resp.Body.Close()
+
+			// var qna
+		} else if algorithm.IsErasingQuestion((ansArray[i])) {
+			var deleteQnA model.QnA
+			pattern := `(?i)hapus pertanyaan (.+)`
+			regex := regexp.MustCompile(pattern)
+			matches := regex.FindStringSubmatch(ansArray[i])
+			deleteQnA.Question = matches[1]
+			deleteQnA.Answer = ""
+			jsonStr, err := json.Marshal(deleteQnA)
+			if err != nil {
+				return err
+			}
+			req, err := http.NewRequest("DELETE", "http://localhost:8000/api/qna", bytes.NewBuffer((jsonStr)))
+			if err != nil {
+				return err
+			}
+			req.Header.Set("Content-Type", "application/json")
+			client := &http.Client{}
+			resp, err := client.Do(req)
+			if err != nil {
+				return err
+			}
+			defer resp.Body.Close()
 
 		} else {
-			sort.Slice(nonMatchStrings, func(i, j int) bool {
-				return nonMatchStrings[i].similarityPercentage > nonMatchStrings[j].similarityPercentage
-			})
-			answer += "Pertanyaan tidak ditemukan di database.\n"
-			answer += "Apakah maksud anda: \n"
-			for i := 1; i <= 3; i++ {
-				answer += (string(i) + ". " + nonMatchStrings[i].nonMatchStringQuestion + "\n")
+			isMatch := false
+			// save similarity match for match n non match pattern so far
+			matchAnswerString := ""
+			similarityMatch := 0.0
+			similarityNonMatch := 0.0
+			nonMatchStringQuestion := ""
+			nonMatchStringAnswer := ""
+			type stringSimilarity struct {
+				nonMatchStringQuestion string
+				nonMatchStringAnswer   string
+				similarityPercentage   float64
 			}
+			var qnas []model.QnA
+			database.DB.Find(&qnas)
+			var nonMatchStrings []stringSimilarity
+			n := len(qnas)
+			println(n)
+			println(ansArray[i])
+			for j := 0; j < n; j++ {
+				if input.Algorithm {
+					// kmp
+					var x string = ansArray[i]
+					var y string = qnas[j].Question
+					index, similarityTemp := algorithm.KMPMatch(x, y)
+					println(index)
+					println(similarityTemp)
 
+					if index == -1 {
+						nonMatchStringQuestion = qnas[j].Question
+						nonMatchStringAnswer = qnas[j].Answer
+						similarityNonMatch = float64(similarityTemp)
+						newTuple := stringSimilarity{nonMatchStringQuestion, nonMatchStringAnswer, similarityNonMatch}
+						nonMatchStrings = append(nonMatchStrings, newTuple)
+					}
+					if index != -1 && similarityTemp >= 90 && similarityTemp > float32(similarityMatch) {
+						matchAnswerString = qnas[j].Answer
+						isMatch = true
+					}
+				} else {
+					// bm
+					inputTemp := strings.ReplaceAll(input.Input, " ", "")
+
+					qnaTemp := strings.ReplaceAll(qnas[j].Question, " ", "")
+					index, similarityTemp := algorithm.BMMatch(inputTemp, qnaTemp)
+
+					if index == -1 {
+						nonMatchStringQuestion = qnas[j].Question
+						nonMatchStringAnswer = qnas[j].Answer
+						similarityNonMatch = float64(similarityTemp)
+						newTuple := stringSimilarity{nonMatchStringQuestion, nonMatchStringAnswer, similarityNonMatch}
+						nonMatchStrings = append(nonMatchStrings, newTuple)
+					}
+					if index != -1 && similarityTemp >= 90 && similarityTemp > float32(similarityMatch) {
+						matchAnswerString = qnas[j].Answer
+						isMatch = true
+					}
+				}
+			}
+			if isMatch {
+				answer += matchAnswerString
+
+			} else {
+				sort.Slice(nonMatchStrings, func(i, j int) bool {
+					return nonMatchStrings[i].similarityPercentage > nonMatchStrings[j].similarityPercentage
+				})
+				if nonMatchStrings[0].similarityPercentage > 90 {
+					answer += nonMatchStrings[0].nonMatchStringAnswer
+				} else {
+					answer += "Pertanyaan tidak ditemukan di database.\n"
+					answer += "Apakah maksud anda: \n"
+					for i := 1; i <= 3; i++ {
+						answer += (strconv.Itoa(i) + ". " + nonMatchStrings[i-1].nonMatchStringQuestion + "\n")
+
+					}
+				}
+			}
 		}
-
 	}
-	newInput := model.InputUser{InputText: input.Input, Algorithm: input.Algorithm, Answer: answer}
+	newInput := model.InputUser{Session: input.Session, InputText: input.Input, Algorithm: input.Algorithm, Answer: answer}
 	if err := database.DB.Create(&newInput).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Internal server error!!",

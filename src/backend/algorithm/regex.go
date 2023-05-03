@@ -12,25 +12,34 @@ func MathOperation(pattern string) bool {
 	return regex.MatchString(pattern)
 }
 
-func isMathOperationValid(pattern string) bool {
+func IsMathOperationValid(pattern string) bool {
 	operation := `^(-?\d+)\s*([\^\-\+\*\/])\s*(-?\d+)(\s*([\^\-\+\*\/])\s*(-?\d+)){0,}(\s.*)*(\n.*)*$`
 	regex := regexp.MustCompile(operation)
 	return regex.MatchString(pattern)
 }
 
-func isDate(pattern string) bool {
+func IsDate(pattern string) bool {
 	regex := regexp.MustCompile(`^([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}\/\d{2}\/\d{4}(\s.*)*(\n.*)*$`)
 	return regex.MatchString(pattern)
 }
 
-func isAddingQNAToDatabase(pattern string) bool {
+func IsAddingQNAToDatabase(pattern string) bool {
 	regex := regexp.MustCompile(`^[tT][aA][mM][bB][aA][hH][kK][aA][nN]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*\s*[dD][eE][nN][gG][aA][nN]\s*[jJ][aA][wW][aA][bB][aA][nN].*(\s.*)*(\n.*)*$`)
 	return regex.MatchString(pattern)
 }
 
-func isErasingQuestion(pattern string) bool {
+func IsErasingQuestion(pattern string) bool {
 	regex := regexp.MustCompile(`^[hH][aA][pP][uU][sS]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN].*(\s.*)*(\n.*)*$`)
 	return regex.MatchString(pattern)
+}
+func IsDayOutput(pattern string) bool {
+	day := [8]string{"Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu", "Masukan tanggal tidak valid!"}
+	for i := 0; i < 8; i++ {
+		if pattern == day[i] {
+			return true
+		}
+	}
+	return false
 }
 
 // manggil check question
@@ -38,12 +47,12 @@ func isErasingQuestion(pattern string) bool {
 // chechQuestion(input, ansArray)
 
 func CheckQuestion(input string, ansArray []string) []string {
-	if (len(input) == 0) {
+	if len(input) == 0 {
 		return ansArray
 	}
 
 	var ans string
-	if isDate(input) {
+	if IsDate(input) {
 		dateparse, _ := regexp.Compile(`(\d{2})/(\d{2})/(\d{4})`)
 		date := dateparse.FindString(input)
 		dayStr := string(date[0:2])
@@ -54,7 +63,7 @@ func CheckQuestion(input string, ansArray []string) []string {
 			ans = "Masukan tanggal tidak valid!"
 			ansArray = append(ansArray, ans)
 		} else {
-			day := calculateDate(date) 
+			day := calculateDate(date)
 			ans = day
 			ansArray = append(ansArray, ans)
 		}
@@ -63,7 +72,7 @@ func CheckQuestion(input string, ansArray []string) []string {
 		matches := re.FindStringSubmatch(input)
 		input = strings.Replace(input, matches[0], "", 1)
 	} else if MathOperation(input) {
-		if isMathOperationValid(input) {
+		if IsMathOperationValid(input) {
 			pattern := `(-?\d+)\s*([\^\-\+\*\/])\s*(-?\d+)(\s*([\^\-\+\*\/])\s*(-?\d+)){0,}\s*\n*`
 			re := regexp.MustCompile(pattern)
 			matches := re.FindStringSubmatch(input)
@@ -73,22 +82,47 @@ func CheckQuestion(input string, ansArray []string) []string {
 			ans = "Sintaks persamaan tidak valid!"
 			ansArray = append(ansArray, ans)
 		}
-		pattern := `^(-?\d+)\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)(\s*([-+*\/])\s*([-+*\/])?\s*(-?\d+)){0,}\s*\n*`
+		pattern := `^(-?\d+)\s*([\^\-\+\*\/])\s*([\^\-\+\*\/])?\s*(-?\d+)(\s*([\^\-\+\*\/])\s*([\^\-\+\*\/])?\s*(-?\d+)){0,}\s*\n*`
 		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)
 		input = strings.Replace(input, matches[0], "", 1)
-	} else if isAddingQNAToDatabase(input) {
-		pattern := `[tT][aA][mM][bB][aA][hH][kK][aA][nN]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*\s*[dD][eE][nN][gG][aA][nN]\s*[jJ][aA][wW][aA][bB][aA][nN].*\n+(.+)`
+	} else if IsAddingQNAToDatabase(input) {
+		pattern := `[tT][aA][mM][bB][aA][hH][kK][aA][nN]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN]\s*.*\s*[dD][eE][nN][gG][aA][nN]\s*[jJ][aA][wW][aA][bB][aA][nN].*\n*`
 		re := regexp.MustCompile(pattern)
+		matches := re.FindStringSubmatch(input)
+		matches_clean := strings.Replace(matches[0], "\n", "", -1)
+		if strings.HasSuffix(matches_clean, " ") {
+			matches_clean = strings.TrimRight(matches_clean, " ")
+		}
+		ansArray = append(ansArray, matches_clean)
 		if re.MatchString(input) {
-			input = re.ReplaceAllString(input, "$1");
+			input = re.ReplaceAllString(input, "$1")
 		} else {
 			input = ""
 		}
-	}  else {
-		pattern := 	`.*\s*\n*`
+	} else if IsErasingQuestion(input) {
+		pattern := `[hH][aA][pP][uU][sS]\s*[pP][eE][rR][tT][aA][nN][yY][aA][aA][nN].*\n*$`
 		re := regexp.MustCompile(pattern)
-		matches := re.FindStringSubmatch(input)	
+		matches := re.FindStringSubmatch(input)
+		matches_clean := strings.Replace(matches[0], "\n", "", -1)
+		if strings.HasSuffix(matches_clean, " ") {
+			matches_clean = strings.TrimRight(matches_clean, " ")
+		}
+		ansArray = append(ansArray, matches_clean)
+		if re.MatchString(input) {
+			input = re.ReplaceAllString(input, "$1")
+		} else {
+			input = ""
+		}
+	} else {
+		pattern := `.*\s*\n*`
+		re := regexp.MustCompile(pattern)
+		matches := re.FindStringSubmatch(input)
+		matches_clean := strings.Replace(matches[0], "\n", "", -1)
+		if strings.HasSuffix(matches_clean, " ") {
+			matches_clean = strings.TrimRight(matches_clean, " ")
+		}
+		ansArray = append(ansArray, matches_clean)
 		input = strings.Replace(input, matches[0], "", 1)
 		return CheckQuestion(input, ansArray)
 	}
