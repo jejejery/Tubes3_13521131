@@ -34,7 +34,7 @@ func IsMathOperationValid(pattern string) bool {
 }
 
 func IsDate(pattern string) bool {
-	regex := regexp.MustCompile(`^([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}\/\d{2}\/\d{4}(\s.*)*(\n.*)*$`)
+	regex := regexp.MustCompile(`^([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}\/\d{2}\/\d{4}.*(\s.*)*(\n.*)*$`)
 	return regex.MatchString(pattern)
 }
 
@@ -82,13 +82,13 @@ func CheckQuestion(input string, ansArray []string) []string {
 			ans = day
 			ansArray = append(ansArray, ans)
 		}
-		pattern := `([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}/\d{2}/\d{4}\s*\n*`
+		pattern := `([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}/\d{2}/\d{4}.*\s*\n*`
 		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)
 		input = strings.Replace(input, matches[0], "", 1)
 	} else if MathOperation(input) {
 		if IsMathOperationValid(input) {
-			pattern := `^\(*\s*\(*\s*(-?\d+)\s*([\^\-\+\*\/])\s*\(*\s*(-?\d+)\s*\)*\s*(\s*([\^\-\+\*\/])\s*(-?\d+)\s*\)*){0,}\s*\)*.*\s*\n*$`
+			pattern := `\(*\s*\(*\s*(-?\d+)\s*([\^\-\+\*\/])\s*\(*\s*(-?\d+)\s*\)*\s*(\s*([\^\-\+\*\/])\s*(-?\d+)\s*\)*){0,}\s*\)*.*\s*\n*`
 			re := regexp.MustCompile(pattern)
 			matches := re.FindStringSubmatch(input)
 			ans = calculateMathOperation(matches[0])
@@ -97,7 +97,7 @@ func CheckQuestion(input string, ansArray []string) []string {
 			ans = "Sintaks persamaan tidak valid!"
 			ansArray = append(ansArray, ans)
 		}
-		pattern := `^\(*\s*\(*\s*(-?\d+)\s*([\^\-+*\/])\s*([\^\-+*\/])?\(*\s*(-?\d+)\s*\)*\s*(\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*\(*\s*(-?\d+)){0,}\s*\)*\s*.*\s*\n*$`
+		pattern := `\(*\s*\(*\s*(-?\d+)\s*([\^\-+*\/])\s*([\^\-+*\/])?\(*\s*(-?\d+)\s*\)*\s*(\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*\(*\s*(-?\d+)){0,}\s*\)*\s*.*\s*\n*`
 		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)
 		input = strings.Replace(input, matches[0], "", 1)
