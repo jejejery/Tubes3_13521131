@@ -72,18 +72,23 @@ func CheckQuestion(input string, ansArray []string) []string {
 		date := dateparse.FindString(input)
 		dayStr := string(date[0:2])
 		monthStr := string(date[3:5])
+		yearStr := string(date[6:10])
 		day, _ := strconv.Atoi(dayStr)
 		month, _ := strconv.Atoi(monthStr)
-		if month == 2 && day > 29 {
+		year, _ := strconv.Atoi(yearStr)
+		if (month == 2 && day > 29 && leap_bool(year)) || (month == 2 && day > 28 && !leap_bool(year)) {
 			ans = "Masukan tanggal tidak valid!"
 			ansArray = append(ansArray, ans)
+		} else if year < 0 || month < 0 || month > 12 || day < 0 || day > 31 { 
+			ans = "Masukan tanggal tidak valid!"
+			ansArray = append(ansArray, ans)	
 		} else {
 			day := calculateDate(date)
 			ans = day
 			ansArray = append(ansArray, ans)
 		}
 		pattern := `([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}/\d{2}/\d{4}.*\s*\n*`
-		re := regexp.MustCompile(pattern)
+		re := regexp.MustCompile(pattern)	
 		matches := re.FindStringSubmatch(input)
 		input = strings.Replace(input, matches[0], "", 1)
 	} else if MathOperation(input) {
@@ -143,3 +148,5 @@ func CheckQuestion(input string, ansArray []string) []string {
 	}
 	return CheckQuestion(input, ansArray)
 }
+
+
