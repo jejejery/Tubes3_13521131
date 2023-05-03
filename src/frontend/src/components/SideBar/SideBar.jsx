@@ -24,7 +24,6 @@ class SideBar extends React.Component {
       isBM : false,
       showHistory: true,
       history : [],
-      // historyIdx: 0
         };
     }
 
@@ -49,18 +48,20 @@ class SideBar extends React.Component {
       if(temp.length < 10){
         temp.push(temp.length+1)
       }
-      // else{
-      //   temp[this.state.historyIdx % 10] += 10
-      // }
-      // this.setState({historyIdx:this.state.historyIdx+1 })
+      else{
+        window.alert('History penuh!');
+      }
       this.setState({history: temp})
+    }
+    handleHistory(historyCode){
+      console.log("code history yang ditekan: " + historyCode)
     }
 
     render_history() {
       let historyItems = [];
       for (let i = 0; i < this.state.history.length; i++) {
         let historyCode = "History " + ('0' + this.state.history[i]).slice(-2); // format nomor menjadi H01, H02, dst.
-        historyItems.push(<li color='purple' onClick={() => console.log(historyCode)}>{historyCode}</li>);
+        historyItems.push(<li color='purple' id = {this.state.history[i]}  onClick={() => this.handleHistory(this.state.history[i])}>{historyCode}</li>);
       }
       return (
         <div className={styles.history}>
