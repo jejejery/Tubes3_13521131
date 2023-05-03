@@ -43,6 +43,7 @@ func Show(c *fiber.Ctx) error {
 func Create(c *fiber.Ctx) error {
 
 	var input struct {
+		Session   int64  `json:"Session"`
 		Input     string `json:"Input"`
 		Algorithm bool   `json:"Algorithm"`
 	}
@@ -190,7 +191,7 @@ func Create(c *fiber.Ctx) error {
 		}
 
 	}
-	newInput := model.InputUser{InputText: input.Input, Algorithm: input.Algorithm, Answer: answer}
+	newInput := model.InputUser{Session: input.Session, InputText: input.Input, Algorithm: input.Algorithm, Answer: answer}
 	if err := database.DB.Create(&newInput).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Internal server error!!",

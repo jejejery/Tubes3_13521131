@@ -54,6 +54,7 @@ class SideBar extends React.Component {
       // }
       // this.setState({historyIdx:this.state.historyIdx+1 })
       this.setState({history: temp})
+      this.props.handleNewSession({target: {value: Date.now()}})
     }
 
     render_history() {

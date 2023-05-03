@@ -14,6 +14,7 @@ type History struct {
 
 type InputUser struct {
 	Id        uint   `json:"Id"`
+	Session   int64  `json:"Session"`
 	InputText string `json:"InputText"`
 	Algorithm bool   `json:"Algorithm"` //true : kmp, false : bm
 	Answer    string `json:"Answer"`

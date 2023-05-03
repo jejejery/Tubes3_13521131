@@ -19,7 +19,8 @@ class MainGPT extends React.Component {
         algo : null,//true : kmp, false: bm
         qaBlocks : [],
         formRows: 1,
-        answer: ""
+        answer: "",
+        startSession: Date.now()
       };
       this.handleKeyPress = this.handleKeyPress.bind(this)
       this.setState = this.setState.bind(this)
@@ -32,16 +33,22 @@ class MainGPT extends React.Component {
       this.myQuestion.current.value = event.target.value;
       
     }
+    handleNewSession = (event) => {
+      this.setState({startSession: event.target.value})
+  
+    }
     handleSubmit = async (event) => {
       event.preventDefault()
       console.log(this.myQuestion.current.value)
       console.log(this.state.algo)
+      console.log(this.state.startSession)
 
 
       const data = {
-
+        Session: this.state.startSession,
         Input :this.myQuestion.current.value,
-        Algorithm: this.state.algo,
+        Algorithm: this.state.algo
+        
       };
       console.log(data)
       await axios.post("http://localhost:8000/api/input", data)
@@ -104,7 +111,7 @@ class MainGPT extends React.Component {
       return (
         <div className={styles.main}>
         <div style={styles.first}>
-          <SideBar style={{ margin: '0 10px' }} handleAlgoChange= {this.handleAlgoChange} />
+          <SideBar style={{ margin: '0 10px' }} handleAlgoChange= {this.handleAlgoChange} handleNewSession= {this.handleNewSession}/>
           <div className={styles.chatbox}>
             {this.state.qaBlocks}
           </div>
