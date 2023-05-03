@@ -16,13 +16,13 @@ class MainGPT extends React.Component {
 
       this.myQuestion = React.createRef(); // membuat ref
       this.state = {        
-        algo : 0,//algo code: 0 is null, 1 is KMP, and 2 is BM
+        algo : null,//true : kmp, false: bm
         qaBlocks : [],
         formRows: 1
       };
       this.handleKeyPress = this.handleKeyPress.bind(this)
       this.setState = this.setState.bind(this)
-      
+
     }
     handleAlgoChange = (event) =>{
       this.setState({algo: event.target.value})
@@ -39,10 +39,10 @@ class MainGPT extends React.Component {
 
       const data = {
 
-        InputText :this.myQuestion.current.value,
+        Input :this.myQuestion.current.value,
         Algorithm: this.state.algo,
       };
-      
+      console.log(data)
 
       //insert into array
       let temp = this.state.qaBlocks
@@ -58,25 +58,25 @@ class MainGPT extends React.Component {
           this.setState({answer : response.data.result})
 
           console.log(data.Input);
-          const pattern1 = /tambahkan pertanyaan (.+) dengan jawaban (.+)/i;
-          const pattern2 = /hapus pertanyaan (.+)/i;
-          const matches1 = data.Input.match(pattern1);
-          const matches2 = data.Input.match(pattern2);
-          if(matches1){
-            // todo: question is available
-            const newQna = {
-              Question: matches1[1],
-              Answer : matches1[2],
-            }
-              axios.post("http://localhost:8000/api/qna", newQna);
-          }
-          else if(matches2){
-            const deleteQna = {
-              Question: matches2[1],
-              Answer: "",
-            }
-            axios.delete("http://localhost:8000/api/qna", {data: deleteQna});
-          }
+          // const pattern1 = /tambahkan pertanyaan (.+) dengan jawaban (.+)/i;
+          // const pattern2 = /hapus pertanyaan (.+)/i;
+          // const matches1 = data.Input.match(pattern1);
+          // const matches2 = data.Input.match(pattern2);
+          // if(matches1){
+          //   // todo: question is available
+          //   const newQna = {
+          //     Question: matches1[1],
+          //     Answer : matches1[2],
+          //   }
+          //     axios.post("http://localhost:8000/api/qna", newQna);
+          // }
+          // else if(matches2){
+          //   const deleteQna = {
+          //     Question: matches2[1],
+          //     Answer: "",
+          //   }
+          //   axios.delete("http://localhost:8000/api/qna", {data: deleteQna});
+          // }
    
           }
         )
@@ -140,7 +140,7 @@ class MainGPT extends React.Component {
                 rows = {this.state.formRows}
                 style={{ fontSize: '24px', marginLeft: '-15%', marginRight: '0px', width: '1400px',}}
                 />
-                <Button type = "submit" style = {{marginLeft: '5px', height: '50px'}} disabled={this.state.algo == 0}> send </Button>
+                <Button type = "submit" style = {{marginLeft: '5px', height: '50px'}} disabled={this.state.algo == null}> send </Button>
               </div>
             </Form.Group>
             </Form>
