@@ -7,13 +7,13 @@ import (
 )
 
 func MathOperation(pattern string) bool {
-	operation := `^\(?\s*\(?\s*(-?\d+)\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*(-?\d+)\)?\s*(\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*(-?\d+)){0,}\)?\s*.*(\s.*)*(\n.*)*$`
+	operation := `^\(*\s*\(*\s*(-?\d+)\s*([\^\-+*\/])\s*([\^\-+*\/])?\(*\s*(-?\d+)\s*\)*\s*(\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*\(*\s*(-?\d+)){0,}\s*\)*\s*.*(\s.*)*(\n.*)*$`
 	regex := regexp.MustCompile(operation)
 	return regex.MatchString(pattern)
 }
 
 func IsMathOperationValid(pattern string) bool {
-	operation := `^\(?\s*\(?\s*(-?\d+)\s*([\^\-\+\*\/])\s*(-?\d+)\)?\s*(\s*([\^\-\+\*\/])\s*(-?\d+)){0,}\)?.*(\s.*)*(\n.*)*$`
+	operation := `^\(?\s*\(?\s*(-?\d+)\s*([\^\-\+\*\/])\s*\(?\s*(-?\d+)\s*\)?\s*(\s*([\^\-\+\*\/])\s*(-?\d+)){0,}\s*\)?\s*.*(\s.*)*(\n.*)*$`
 	regex := regexp.MustCompile(operation)
 	if !regex.MatchString(pattern) {
 		return false
@@ -88,7 +88,7 @@ func CheckQuestion(input string, ansArray []string) []string {
 		input = strings.Replace(input, matches[0], "", 1)
 	} else if MathOperation(input) {
 		if IsMathOperationValid(input) {
-			pattern := `^\(?\(?(-?\d+)\s*([\^\-\+\*\/])\s*(-?\d+)\)?(\s*([\^\-\+\*\/])\s*(-?\d+)){0,}\)?.*\s*\n*$`
+			pattern := `^\(*\s*\(*\s*(-?\d+)\s*([\^\-\+\*\/])\s*\(*\s*(-?\d+)\s*\)*\s*(\s*([\^\-\+\*\/])\s*(-?\d+)\s*\)*){0,}\s*\)*.*\s*\n*$`
 			re := regexp.MustCompile(pattern)
 			matches := re.FindStringSubmatch(input)
 			ans = calculateMathOperation(matches[0])
@@ -97,7 +97,7 @@ func CheckQuestion(input string, ansArray []string) []string {
 			ans = "Sintaks persamaan tidak valid!"
 			ansArray = append(ansArray, ans)
 		}
-		pattern := `^\(?\s*\(?\s*(-?\d+)\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*(-?\d+)\)?\s*(\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*(-?\d+)){0,}\)?.*\s*\n*$`
+		pattern := `^\(*\s*\(*\s*(-?\d+)\s*([\^\-+*\/])\s*([\^\-+*\/])?\(*\s*(-?\d+)\s*\)*\s*(\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*\(*\s*(-?\d+)){0,}\s*\)*\s*.*\s*\n*$`
 		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)
 		input = strings.Replace(input, matches[0], "", 1)
