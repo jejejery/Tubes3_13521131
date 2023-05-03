@@ -32,16 +32,16 @@ class SideBar extends React.Component {
       this.setState({
         isKMP : !this.state.isKMP
       })
-      if(!this.state.isKMP)this.props.handleAlgoChange({target: {value: 1}});
-      else this.props.handleAlgoChange({target: {value: 0}});
+      if(!this.state.isKMP)this.props.handleAlgoChange({target: {value: true}});
+      else this.props.handleAlgoChange({target: {value: this.state.isKMP}});
     }
 
     setBM = (e) =>{
       this.setState({
         isBM : !this.state.isBM
       })
-      if(!this.state.isBM)this.props.handleAlgoChange({target: {value: 2}});
-      else this.props.handleAlgoChange({target: {value: 0}});
+      if(!this.state.isBM)this.props.handleAlgoChange({target: {value: false}});
+      else this.props.handleAlgoChange({target: {value: this.state.isKMP}});
     }
     addHistory = (e) =>{
       e.preventDefault()

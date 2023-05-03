@@ -32,24 +32,23 @@ func main() {
 	history := api.Group("/history")
 
 	qna.Get("/", qnaController.Index)
-	qna.Get("/", qnaController.Show)
+	qna.Get("/:id", qnaController.Show)
 	qna.Post("/", qnaController.Create)
 	// qna.Put("/:id", qnaController.Update)
 
 	qna.Delete("/", qnaController.Delete)
 
 	history.Get("/", historyController.Index)
+
 	history.Get("/:id", historyController.Show)
+
 	history.Post("/", historyController.Create)
 	// qna.Put("/:id", qnaController.Update)
-
 	history.Delete("/:id", historyController.Delete)
-
 	input.Get("/", inputcontroller.Index)
 	input.Get("/:id", inputcontroller.Show)
 	input.Post("/", inputcontroller.Create)
 	// qna.Put("/:id", qnaController.Update)
-
 	input.Delete("/:id", inputcontroller.Delete)
 
 	app.Listen(":" + port)
