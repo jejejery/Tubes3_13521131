@@ -26,13 +26,12 @@ func Show(c *fiber.Ctx) error {
 	session, err := strconv.ParseInt(c.Query("Session"), 10, 64)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Bad req",
+			"message": "Bad request!!",
 		})
 	}
 	var interactions []model.InputUser
 
 	database.DB.Where("Session = ?", session).Find(&interactions)
-	println("yey")
 	return c.JSON(interactions)
 }
 
@@ -192,19 +191,4 @@ func Create(c *fiber.Ctx) error {
 		})
 	}
 	return c.JSON(newInput)
-}
-
-func Delete(c *fiber.Ctx) error {
-	id := c.Params("question")
-
-	var input model.InputUser
-	if database.DB.Delete(&input, id).RowsAffected == 0 {
-		println("masuk ke sini dia ges")
-		return c.Status(http.StatusNotFound).JSON(fiber.Map{
-			"message": "Can not delete the data",
-		})
-	}
-	return c.JSON(fiber.Map{
-		"message": "Data is successfully deleted!",
-	})
 }

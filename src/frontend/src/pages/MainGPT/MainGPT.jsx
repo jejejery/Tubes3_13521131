@@ -38,8 +38,6 @@ class MainGPT extends React.Component {
   
     }
     handleHistory = async(event) => {
-      console.log("code history yang ditekan: " + event.target.value)
-
       await axios.get(`http://localhost:8000/api/input/toShow?Session=${event.target.value}`)
       .then(response => {
         console.log(response.data)
@@ -61,14 +59,12 @@ class MainGPT extends React.Component {
       console.log(this.state.algo)
       console.log(this.state.startSession)
 
-
       const data = {
         Session: this.state.startSession,
         Input :this.myQuestion.current.value,
         Algorithm: this.state.algo
         
       };
-      console.log(data)
       await axios.post("http://localhost:8000/api/input", data)
       .then(response => {
         let temp = this.state.qaBlocks

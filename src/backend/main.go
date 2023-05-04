@@ -32,7 +32,6 @@ func main() {
 	session := api.Group("/session")
 
 	qna.Get("/", qnaController.Index)
-	qna.Get("/:id", qnaController.Show)
 	qna.Post("/", qnaController.Create)
 	// qna.Put("/:id", qnaController.Update)
 	qna.Delete("/", qnaController.Delete)
@@ -40,13 +39,9 @@ func main() {
 	input.Get("/", inputcontroller.Index)
 	input.Get("/toShow", inputcontroller.Show)
 	input.Post("/", inputcontroller.Create)
-	// qna.Put("/:id", qnaController.Update)
-	input.Delete("/:id", inputcontroller.Delete)
-
 
 	session.Get("/", sessionController.Index)
 	session.Post("/", sessionController.Create)
-
 
 	app.Listen(":" + port)
 

@@ -1,8 +1,6 @@
 package qnaController
 
 import (
-	"net/http"
-
 	"github.com/gofiber/fiber/v2"
 	database "github.com/jejejery/src/backend/db"
 	"github.com/jejejery/src/backend/model"
@@ -12,26 +10,8 @@ import (
 func Index(c *fiber.Ctx) error {
 	var qnas []model.QnA
 	database.DB.Find(&qnas)
-	
+
 	return c.JSON(qnas)
-}
-
-func Show(c *fiber.Ctx) error {
-
-	id := c.Params("id")
-	var qna model.QnA
-	if err := database.DB.First(&qna, id).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return c.Status(http.StatusNotFound).JSON(fiber.Map{
-				"message": "Data is not found!",
-			})
-		}
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Data is not found!",
-		})
-	}
-	database.DB.First(&qna, id) // ambil data pertamma yang match
-	return c.JSON(qna)
 }
 
 func Create(c *fiber.Ctx) error {
