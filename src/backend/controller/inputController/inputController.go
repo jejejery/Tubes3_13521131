@@ -85,13 +85,19 @@ func Create(c *fiber.Ctx) error {
 
 			// var qna
 		} else if algorithm.IsErasingQuestion((ansArray[i])) {
-			var deleteQnA model.QnA
+			var request struct {
+				Question  string
+				Answer    string
+				Algorithm bool
+			}
 			pattern := `(?i)hapus pertanyaan (.+)`
 			regex := regexp.MustCompile(pattern)
 			matches := regex.FindStringSubmatch(ansArray[i])
-			deleteQnA.Question = matches[1]
-			deleteQnA.Answer = ""
-			jsonStr, err := json.Marshal(deleteQnA)
+			request.Question = matches[1]
+			request.Answer = ""
+			request.Algorithm = input.Algorithm
+
+			jsonStr, err := json.Marshal(request)
 			if err != nil {
 				return err
 			}
@@ -130,7 +136,6 @@ func Create(c *fiber.Ctx) error {
 			println(ansArray[i])
 			for j := 0; j < n; j++ {
 				if input.Algorithm {
-					// kmp
 					var x string = ansArray[i]
 					var y string = qnas[j].Question
 					index, similarityTemp := algorithm.KMPMatch(x, y)
