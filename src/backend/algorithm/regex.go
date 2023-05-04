@@ -13,7 +13,7 @@ func MathOperation(pattern string) bool {
 }
 
 func IsMathOperationValid(pattern string) bool {
-	operation := `^\(?\s*\(?\s*(-?\d+(?:\.\d+)?)\s*([\^\-\+\*\/])\s*\(?\s*(-?\d+(?:\.\d+)?)\s*\)?\s*(\s*([\^\-\+\*\/])\s*(-?\d+(?:\.\d+)?)){0,}\s*\)?\s*.*(\s.*)*(\n.*)*$`
+	operation := `^\(?\s*\(?\s*(-?([1-9][0-9]{0,}(?:\.\d+)?|\d+\.\d+))\s*([\^\-\+\*\/])\s*\(?\s*(-?([1-9][0-9]{0,}(?:\.\d+)?|\d+\.\d+))\s*\)?\s*(\s*([\^\-\+\*\/])\s*(-?([1-9][0-9]{0,}(?:\.\d+)?|\d+\.\d+))){0,}\s*\)?\s*.*(\s.*)*(\n.*)*$`
 	regex := regexp.MustCompile(operation)
 	if !regex.MatchString(pattern) {
 		return false
@@ -83,7 +83,6 @@ func CheckQuestion(input string, ansArray []string) []string {
 			yearStr = string(date[6:10])
 		}
 		if len(date) == 0 {
-			println("Masuk 1")
 			dateparse, _ = regexp.Compile(`(\d{1})/(\d{2})/(\d{4})`)
 			date = dateparse.FindString(input)
 			if len(date) != 0 {
@@ -94,7 +93,6 @@ func CheckQuestion(input string, ansArray []string) []string {
 			}
 		} 
 		if len(date) == 0 {
-			println("Masuk 2")
 			dateparse, _ = regexp.Compile(`(\d{2})/(\d{1})/(\d{4})`)
 			date = dateparse.FindString(input)
 			if len(date) != 0 {
@@ -104,7 +102,6 @@ func CheckQuestion(input string, ansArray []string) []string {
 			}
 		}
 		if len(date) == 0 {
-			println("Masuk 3")
 			dateparse, _ = regexp.Compile(`(\d{1})/(\d{1})/(\d{4})`)
 			date = dateparse.FindString(input)	
 			dayStr = string(date[0:1])
