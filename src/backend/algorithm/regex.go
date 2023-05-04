@@ -76,7 +76,6 @@ func CheckQuestion(input string, ansArray []string) []string {
 		dayStr := ""
 		monthStr := ""
 		yearStr := ""
-		var monthTwoStr bool = false
 		if len(date) != 0 {
 			dayStr = string(date[0:2])
 			monthStr = string(date[3:5])
@@ -86,7 +85,6 @@ func CheckQuestion(input string, ansArray []string) []string {
 			dateparse, _ = regexp.Compile(`(\d{1})/(\d{2})/(\d{4})`)
 			date = dateparse.FindString(input)
 			if len(date) != 0 {
-				monthTwoStr = true
 				dayStr = string(date[0:1])
 				monthStr = string(date[2:4])
 				yearStr = string(date[5:9])
@@ -111,7 +109,7 @@ func CheckQuestion(input string, ansArray []string) []string {
 		day, _ := strconv.Atoi(dayStr)
 		month, _ := strconv.Atoi(monthStr)
 		year, _ := strconv.Atoi(yearStr)
-		if (monthTwoStr && month == 2 && (day > 29 || day < 0) && leap_bool(year)) || (monthTwoStr && month == 2 && (day > 28 || day < 0) && !leap_bool(year)) || (monthTwoStr && (day > 31 || day < 1) && month > 0 && month <= 12) {
+		if (month == 2 && (day > 29 || day < 0) && leap_bool(year)) || (month == 2 && (day > 28 || day < 0) && !leap_bool(year)) || ((day > 31 || day < 1) && month > 0 && month <= 12) {
 			ans = "Masukan tanggal tidak valid!"
 			ansArray = append(ansArray, ans)
 		} else if year < 0 || month < 0 || month > 12 || day < 0 || day > 31 { 
