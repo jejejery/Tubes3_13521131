@@ -12,6 +12,7 @@ import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import { Planet } from 'react-kawaii';
 import styles from './SideBar.module.css'
 import RSwitch from "react-switch";
+import axios from "axios"
 // import MainGPT from '../../pages/MainGPT/MainGPT';
 
 
@@ -42,10 +43,36 @@ class SideBar extends React.Component {
       if(!this.state.isBM)this.props.handleAlgoChange({target: {value: false}});
       else this.props.handleAlgoChange({target: {value: this.state.isKMP}});
     }
-    addHistory = (e) =>{
+    componentDidMount(){
+      axios.get("http://localhost:8000/api/session")
+        .then(response =>{
+          const temp = [];
+          let n = response.data.length-1;
+          let count = 0;
+          while(n>=0 && count < 9){
+              count++;
+              console.log(temp[n])
+              temp.push(response.data[n].Session)
+              n--;
+          }
+
+          this.setState({history: temp})
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
+    
+    addHistory = async(e) =>{
       e.preventDefault()
       let temp = this.state.history
       let now = Date.now()
+      console.log(now)
+      const data = {
+        Session : now
+      }
+      await axios.post("http://localhost:8000/api/session", data)
+      
       if(temp.length < 10){
         // temp.push(temp.length+1)
         temp.push(now)
@@ -77,10 +104,13 @@ class SideBar extends React.Component {
     }
 
 
+
     render_history() {
       let historyItems = [];
       for (let i = 0; i < this.state.history.length; i++) {
+        console.log("hai")
         let historyCode = "History " + ('0' + this.state.history[i]).slice(-2); // format nomor menjadi H01, H02, dst.
+
         historyItems.push(<li color='purple' id = {this.state.history[i]}  onClick={() => this.chooseHistory(this.state.history[i])}>{historyCode}</li>);
       }
       return (

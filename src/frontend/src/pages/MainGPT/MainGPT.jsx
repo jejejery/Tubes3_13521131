@@ -31,10 +31,10 @@ class MainGPT extends React.Component {
     }
     handleReadText = (event) =>{
       this.myQuestion.current.value = event.target.value;
-      
     }
     handleNewSession = (event) => {
       this.setState({startSession: event.target.value})
+      this.setState({qaBlocks : []})
   
     }
     handleHistory = async(event) => {
@@ -42,22 +42,12 @@ class MainGPT extends React.Component {
 
       await axios.get(`http://localhost:8000/api/input/toShow?Session=${event.target.value}`)
       .then(response => {
-        // let temp = this.state.qaBlocks
-        // temp.push(this.render_q_block(this.myQuestion.current.value,response.data.Answer))
-        // this.setState({qaBlocks: temp})
-        // this.setState({answer : response.data.Answer})
-        // let temp1 = response.data
-        
         console.log(response.data)
-        let temp = this.state.qaBlocks
+        let temp = []
         for(let i = 0; i < response.data.length; i++){
-          console.log(response.data[i].InputText)
-          console.log(response.data[i].Answer)
           temp.push(this.render_q_block(response.data[i].InputText,response.data[i].Answer))
         }
-        
         this.setState({qaBlocks: temp})
- 
         }
       )
       .catch(error =>{

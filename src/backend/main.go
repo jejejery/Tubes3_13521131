@@ -6,9 +6,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/jejejery/src/backend/controller/historyController"
 	inputcontroller "github.com/jejejery/src/backend/controller/inputController"
 	"github.com/jejejery/src/backend/controller/qnaController"
+	"github.com/jejejery/src/backend/controller/sessionController"
 	database "github.com/jejejery/src/backend/db"
 	"github.com/joho/godotenv"
 )
@@ -29,27 +29,24 @@ func main() {
 	api := app.Group("/api")
 	qna := api.Group("/qna")
 	input := api.Group("/input")
-	history := api.Group("/history")
+	session := api.Group("/session")
 
 	qna.Get("/", qnaController.Index)
 	qna.Get("/:id", qnaController.Show)
 	qna.Post("/", qnaController.Create)
 	// qna.Put("/:id", qnaController.Update)
-
 	qna.Delete("/", qnaController.Delete)
 
-	history.Get("/", historyController.Index)
-
-	history.Get("/:id", historyController.Show)
-
-	history.Post("/", historyController.Create)
-	// qna.Put("/:id", qnaController.Update)
-	history.Delete("/:id", historyController.Delete)
 	input.Get("/", inputcontroller.Index)
 	input.Get("/toShow", inputcontroller.Show)
 	input.Post("/", inputcontroller.Create)
 	// qna.Put("/:id", qnaController.Update)
 	input.Delete("/:id", inputcontroller.Delete)
+
+
+	session.Get("/", sessionController.Index)
+	session.Post("/", sessionController.Create)
+
 
 	app.Listen(":" + port)
 

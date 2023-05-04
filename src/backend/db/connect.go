@@ -29,8 +29,8 @@ func Connect() {
 
 	database.AutoMigrate(
 		&model.QnA{},
-		&model.History{},
 		&model.InputUser{},
+		&model.Sessions{},
 	)
 
 }
