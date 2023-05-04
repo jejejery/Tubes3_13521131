@@ -7,19 +7,34 @@ import (
 )
 
 func MathOperation(pattern string) bool {
-	operation := `^(-?\d+)\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*(-?\d+)(\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*(-?\d+)){0,}(\s.*)*(\n.*)*$`
+	operation := `^\(*\s*\(*\s*(-?\d+)\s*([\^\-+*\/])\s*([\^\-+*\/])?\(*\s*(-?\d+)\s*\)*\s*(\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*\(*\s*(-?\d+)){0,}\s*\)*\s*.*(\s.*)*(\n.*)*$`
 	regex := regexp.MustCompile(operation)
 	return regex.MatchString(pattern)
 }
 
 func IsMathOperationValid(pattern string) bool {
-	operation := `^(-?\d+)\s*([\^\-\+\*\/])\s*(-?\d+)(\s*([\^\-\+\*\/])\s*(-?\d+)){0,}(\s.*)*(\n.*)*$`
+	operation := `^\(?\s*\(?\s*(-?\d+)\s*([\^\-\+\*\/])\s*\(?\s*(-?\d+)\s*\)?\s*(\s*([\^\-\+\*\/])\s*(-?\d+)){0,}\s*\)?\s*.*(\s.*)*(\n.*)*$`
 	regex := regexp.MustCompile(operation)
-	return regex.MatchString(pattern)
+	if !regex.MatchString(pattern) {
+		return false
+	}
+	// check the parentheses
+	stack := []rune{}
+	for _, char := range pattern {
+		if char == '(' {
+			stack = append(stack, char)
+		} else if char == ')' {
+			if len(stack) == 0 || stack[len(stack)-1] != '(' {
+                return false
+            }
+            stack = stack[:len(stack)-1]
+		}
+	}
+	return len(stack) == 0
 }
 
 func IsDate(pattern string) bool {
-	regex := regexp.MustCompile(`^([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}\/\d{2}\/\d{4}(\s.*)*(\n.*)*$`)
+	regex := regexp.MustCompile(`^([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}\/\d{2}\/\d{4}.*(\s.*)*(\n.*)*$`)
 	return regex.MatchString(pattern)
 }
 
@@ -57,23 +72,28 @@ func CheckQuestion(input string, ansArray []string) []string {
 		date := dateparse.FindString(input)
 		dayStr := string(date[0:2])
 		monthStr := string(date[3:5])
+		yearStr := string(date[6:10])
 		day, _ := strconv.Atoi(dayStr)
 		month, _ := strconv.Atoi(monthStr)
-		if month == 2 && day > 29 {
+		year, _ := strconv.Atoi(yearStr)
+		if (month == 2 && day > 29 && leap_bool(year)) || (month == 2 && day > 28 && !leap_bool(year)) {
 			ans = "Masukan tanggal tidak valid!"
 			ansArray = append(ansArray, ans)
+		} else if year < 0 || month < 0 || month > 12 || day < 0 || day > 31 { 
+			ans = "Masukan tanggal tidak valid!"
+			ansArray = append(ansArray, ans)	
 		} else {
 			day := calculateDate(date)
 			ans = day
 			ansArray = append(ansArray, ans)
 		}
-		pattern := `([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}/\d{2}/\d{4}\s*\n*`
-		re := regexp.MustCompile(pattern)
+		pattern := `([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}/\d{2}/\d{4}.*\s*\n*`
+		re := regexp.MustCompile(pattern)	
 		matches := re.FindStringSubmatch(input)
 		input = strings.Replace(input, matches[0], "", 1)
 	} else if MathOperation(input) {
 		if IsMathOperationValid(input) {
-			pattern := `(-?\d+)\s*([\^\-\+\*\/])\s*(-?\d+)(\s*([\^\-\+\*\/])\s*(-?\d+)){0,}\s*\n*`
+			pattern := `\(*\s*\(*\s*(-?\d+)\s*([\^\-\+\*\/])\s*\(*\s*(-?\d+)\s*\)*\s*(\s*([\^\-\+\*\/])\s*(-?\d+)\s*\)*){0,}\s*\)*.*\s*\n*`
 			re := regexp.MustCompile(pattern)
 			matches := re.FindStringSubmatch(input)
 			ans = calculateMathOperation(matches[0])
@@ -82,7 +102,7 @@ func CheckQuestion(input string, ansArray []string) []string {
 			ans = "Sintaks persamaan tidak valid!"
 			ansArray = append(ansArray, ans)
 		}
-		pattern := `^(-?\d+)\s*([\^\-\+\*\/])\s*([\^\-\+\*\/])?\s*(-?\d+)(\s*([\^\-\+\*\/])\s*([\^\-\+\*\/])?\s*(-?\d+)){0,}\s*\n*`
+		pattern := `\(*\s*\(*\s*(-?\d+)\s*([\^\-+*\/])\s*([\^\-+*\/])?\(*\s*(-?\d+)\s*\)*\s*(\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*\(*\s*(-?\d+)){0,}\s*\)*\s*.*\s*\n*`
 		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)
 		input = strings.Replace(input, matches[0], "", 1)
@@ -128,3 +148,5 @@ func CheckQuestion(input string, ansArray []string) []string {
 	}
 	return CheckQuestion(input, ansArray)
 }
+
+
