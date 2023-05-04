@@ -96,15 +96,15 @@ func CheckQuestion(input string, ansArray []string) []string {
 			if len(date) != 0 {
 				dayStr = string(date[0:2])
 				monthStr = string(date[3:4])
-				yearStr = string(date[5:9])						
+				yearStr = string(date[5:9])					
 			}
 		}
 		if len(date) == 0 {
 			dateparse, _ = regexp.Compile(`(\d{1})/(\d{1})/(\d{4})`)
-			date = dateparse.FindString(input)	
+			date = dateparse.FindString(input)
 			dayStr = string(date[0:1])
 			monthStr = string(date[2:3])
-			yearStr = string(date[4:8])	
+			yearStr = string(date[4:8])
 		}
 		day, _ := strconv.Atoi(dayStr)
 		month, _ := strconv.Atoi(monthStr)
