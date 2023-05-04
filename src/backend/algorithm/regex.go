@@ -35,7 +35,10 @@ func IsMathOperationValid(pattern string) bool {
 
 func IsDate(pattern string) bool {
 	regex := regexp.MustCompile(`^([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}\/\d{2}\/\d{4}.*(\s.*)*(\n.*)*$`)
-	return regex.MatchString(pattern)
+	regex2 := regexp.MustCompile(`^([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{1}\/\d{2}\/\d{4}.*(\s.*)*(\n.*)*$`)
+	regex3 := regexp.MustCompile(`^([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}\/\d{1}\/\d{4}.*(\s.*)*(\n.*)*$`)
+	regex4 := regexp.MustCompile(`^([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{1}\/\d{1}\/\d{4}.*(\s.*)*(\n.*)*$`)
+	return regex.MatchString(pattern) || regex2.MatchString(pattern) || regex3.MatchString(pattern) || regex4.MatchString(pattern)
 }
 
 func IsAddingQNAToDatabase(pattern string) bool {
@@ -70,30 +73,93 @@ func CheckQuestion(input string, ansArray []string) []string {
 	if IsDate(input) {
 		dateparse, _ := regexp.Compile(`(\d{2})/(\d{2})/(\d{4})`)
 		date := dateparse.FindString(input)
-		dayStr := string(date[0:2])
-		monthStr := string(date[3:5])
-		yearStr := string(date[6:10])
+		dayStr := ""
+		monthStr := ""
+		yearStr := ""
+		var monthTwoStr bool = false
+		if len(date) != 0 {
+			dayStr = string(date[0:2])
+			monthStr = string(date[3:5])
+			yearStr = string(date[6:10])
+		}
+		if len(date) == 0 {
+			println("Masuk 1")
+			dateparse, _ = regexp.Compile(`(\d{1})/(\d{2})/(\d{4})`)
+			date = dateparse.FindString(input)
+			if len(date) != 0 {
+				monthTwoStr = true
+				dayStr = string(date[0:1])
+				monthStr = string(date[2:4])
+				yearStr = string(date[5:9])
+			}
+		} 
+		if len(date) == 0 {
+			println("Masuk 2")
+			dateparse, _ = regexp.Compile(`(\d{2})/(\d{1})/(\d{4})`)
+			date = dateparse.FindString(input)
+			if len(date) != 0 {
+				dayStr = string(date[0:2])
+				monthStr = string(date[3:4])
+				yearStr = string(date[5:9])						
+			}
+		}
+		if len(date) == 0 {
+			println("Masuk 3")
+			dateparse, _ = regexp.Compile(`(\d{1})/(\d{1})/(\d{4})`)
+			date = dateparse.FindString(input)	
+			dayStr = string(date[0:1])
+			monthStr = string(date[2:3])
+			yearStr = string(date[4:8])	
+		}
 		day, _ := strconv.Atoi(dayStr)
 		month, _ := strconv.Atoi(monthStr)
 		year, _ := strconv.Atoi(yearStr)
-		if (month == 2 && day > 29 && leap_bool(year)) || (month == 2 && day > 28 && !leap_bool(year)) {
+		if (monthTwoStr && month == 2 && (day > 29 || day < 0) && leap_bool(year)) || (monthTwoStr && month == 2 && (day > 28 || day < 0) && !leap_bool(year)) || (monthTwoStr && (day > 31 || day < 1) && month > 0 && month <= 12) {
 			ans = "Masukan tanggal tidak valid!"
 			ansArray = append(ansArray, ans)
 		} else if year < 0 || month < 0 || month > 12 || day < 0 || day > 31 { 
-			ans = "Masukan tanggal tidak valid!"
-			ansArray = append(ansArray, ans)	
+			if (IsMathOperationValid(input)) {
+				pattern := `\(*\s*\(*\s*(-?\d+)\s*([\^\-\+\*\/])\s*\(*\s*(-?\d+)\s*\)*\s*(\s*([\^\-\+\*\/])\s*(-?\d+)\s*\)*){0,}\s*\)*\s*\n*`
+				re := regexp.MustCompile(pattern)
+				matches := re.FindStringSubmatch(input)
+				ans = calculateMathOperation(matches[0])
+				ansArray = append(ansArray, ans)
+				pattern = `\(*\s*\(*\s*(-?\d+)\s*([\^\-+*\/])\s*([\^\-+*\/])?\(*\s*(-?\d+)\s*\)*\s*(\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*\(*\s*(-?\d+)){0,}\s*\)*\?*\=*\s*\n*`
+				re = regexp.MustCompile(pattern)
+				matches = re.FindStringSubmatch(input)
+				input = strings.Replace(input, matches[0], "", 1)
+				return CheckQuestion(input, ansArray)
+			} else {
+				ans = "Masukan tanggal tidak valid!"
+				ansArray = append(ansArray, ans)	
+			}
 		} else {
-			day := calculateDate(date)
+			day := calculateDate(day, month, year)
 			ans = day
 			ansArray = append(ansArray, ans)
 		}
 		pattern := `([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}/\d{2}/\d{4}.*\s*\n*`
-		re := regexp.MustCompile(pattern)	
+		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)
+		if len(matches) == 0 {
+			pattern = `([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{1}/\d{2}/\d{4}.*\s*\n*`
+			re = regexp.MustCompile(pattern)
+			matches = re.FindStringSubmatch(input)
+		}
+		if len(matches) == 0 {
+			pattern = `([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{2}/\d{1}/\d{4}.*\s*\n*`
+			re = regexp.MustCompile(pattern)
+			matches = re.FindStringSubmatch(input)
+		}
+		if len(matches) == 0 {
+			pattern = `([Hh][aA][rR][iI]\s*[aA][Pp][Aa]\s*)?\d{1}/\d{1}/\d{4}.*\s*\n*`
+			re = regexp.MustCompile(pattern)
+			matches = re.FindStringSubmatch(input)
+		}
 		input = strings.Replace(input, matches[0], "", 1)
 	} else if MathOperation(input) {
 		if IsMathOperationValid(input) {
-			pattern := `\(*\s*\(*\s*(-?\d+)\s*([\^\-\+\*\/])\s*\(*\s*(-?\d+)\s*\)*\s*(\s*([\^\-\+\*\/])\s*(-?\d+)\s*\)*){0,}\s*\)*.*\s*\n*`
+			pattern := `\(*\s*\(*\s*(-?\d+)\s*([\^\-\+\*\/])\s*\(*\s*(-?\d+)\s*\)*\s*(\s*([\^\-\+\*\/])\s*(-?\d+)\s*\)*){0,}\s*\)*\s*\n*`
 			re := regexp.MustCompile(pattern)
 			matches := re.FindStringSubmatch(input)
 			ans = calculateMathOperation(matches[0])
@@ -102,7 +168,7 @@ func CheckQuestion(input string, ansArray []string) []string {
 			ans = "Sintaks persamaan tidak valid!"
 			ansArray = append(ansArray, ans)
 		}
-		pattern := `\(*\s*\(*\s*(-?\d+)\s*([\^\-+*\/])\s*([\^\-+*\/])?\(*\s*(-?\d+)\s*\)*\s*(\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*\(*\s*(-?\d+)){0,}\s*\)*\s*.*\s*\n*`
+		pattern := `\(*\s*\(*\s*(-?\d+)\s*([\^\-+*\/])\s*([\^\-+*\/])?\(*\s*(-?\d+)\s*\)*\s*(\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*\(*\s*(-?\d+)){0,}\s*\)*\?*\=*\s*\n*`
 		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)
 		input = strings.Replace(input, matches[0], "", 1)

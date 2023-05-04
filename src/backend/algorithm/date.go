@@ -1,19 +1,10 @@
 package algorithm
 
 import (
-	"strconv"
 	"math"
 ) 
 
-func calculateDate(date string) string {
-	dayStr := string(date[0:2])
-	monthStr := string(date[3:5])
-	yearStr := string(date[6:10])
-
-	day, _ := strconv.Atoi(dayStr)
-	month, _ := strconv.Atoi(monthStr)
-	year, _ := strconv.Atoi(yearStr)
-
+func calculateDate(day int, month int, year int) string {
 	// array with number of days each month
 	daysMonth := [12]int{31, 28 + leap(year), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
 	

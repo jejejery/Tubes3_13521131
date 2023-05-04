@@ -96,26 +96,30 @@ class MainGPT extends React.Component {
       }
     }
     
-    render_q_block(question,answer){
+    render_q_block(question, answer){
+      const questionLineCount = (question.match(/\n/g) || []).length + 1;
+      const answerLineCount = (answer.match(/\n/g) || []).length + 1;
+    
+      const qblockHeight = 150 + (questionLineCount - 1) * 20; // 20 is the line height
+      const ablockHeight = 100 + (answerLineCount - 1) * 20;
+    
       return (
         <div>
-          <div class = {styles.qblock}>
-            <div >
+          <div class={styles.qblock} style={{height: qblockHeight + 'px'}}>
+            <div>
               <SpeechBubble size={80} mood="excited" color="rgb(90, 88, 177)" /> 
               <span dangerouslySetInnerHTML={{__html: question.replace(/\n/g, '<br>') }} />
             </div>
           </div>
-
-          <div class = {styles.ablock}>
+    
+          <div class={styles.ablock} style={{height: ablockHeight + 'px'}}>
             <div>
               <SpeechBubble size={80} mood="happy" color="#7e4474" /> 
-              <span>{answer}</span>
+              <span dangerouslySetInnerHTML={{__html: answer.replace(/\n/g, '<br>') }} />
             </div>          
           </div>
         </div>
-        
-        
-      )
+      );
     }
 
     render() { 
