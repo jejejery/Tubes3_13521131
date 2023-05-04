@@ -29,17 +29,16 @@ func Create(c *fiber.Ctx) error {
 					"message": "Internal server error!!",
 				})
 			}
-			return c.JSON(newQna)
+			return c.SendString("Pertanyaan berhasil ditambahkan ke database!")
 		} else {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"message": "Internal server error!!",
 			})
 		}
+	} else {
+		// update
+		return c.SendString("Pertanyaan sudah tersedia dan jawaban akan diupdate menjadi...")
 	}
-	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-		"message": "The question is available",
-	})
-
 }
 
 func Delete(c *fiber.Ctx) error {
@@ -51,13 +50,9 @@ func Delete(c *fiber.Ctx) error {
 		})
 	}
 	if err := database.DB.Where("question = ?", deleteQna.Question).First(&temp).Error; err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "The question you want to delete is unavailable! You can't delete it",
-		})
+		return c.SendString("Pertanyaan yang ingin dihapus tidak tersedia di database!")
 	} else {
 		database.DB.Where("question = ?", deleteQna.Question).Delete(&temp)
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
-			"message": "Record deleted successfully",
-		})
+		return c.SendString("Pertanyaan berhasil dihapus!")
 	}
 }

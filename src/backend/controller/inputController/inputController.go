@@ -3,6 +3,7 @@ package inputcontroller
 import (
 	"bytes"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"regexp"
 	"sort"
@@ -80,6 +81,8 @@ func Create(c *fiber.Ctx) error {
 				return err
 			}
 			defer resp.Body.Close()
+			bodyBytes, err := ioutil.ReadAll(resp.Body)
+			answer += string(bodyBytes)
 
 			// var qna
 		} else if algorithm.IsErasingQuestion((ansArray[i])) {
@@ -104,6 +107,8 @@ func Create(c *fiber.Ctx) error {
 				return err
 			}
 			defer resp.Body.Close()
+			bodyBytes, err := ioutil.ReadAll(resp.Body)
+			answer += string(bodyBytes)
 
 		} else {
 			isMatch := false
