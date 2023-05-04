@@ -13,7 +13,6 @@ import (
 	"github.com/jejejery/src/backend/algorithm"
 	database "github.com/jejejery/src/backend/db"
 	"github.com/jejejery/src/backend/model"
-	"gorm.io/gorm"
 )
 
 func Index(c *fiber.Ctx) error {
@@ -24,20 +23,17 @@ func Index(c *fiber.Ctx) error {
 
 func Show(c *fiber.Ctx) error {
 
-	id := c.Params("id")
-	var input model.InputUser
-	if err := database.DB.First(&input, id).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return c.Status(http.StatusNotFound).JSON(fiber.Map{
-				"message": "Data is not found!",
-			})
-		}
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Data is not found!",
+	session, err := strconv.ParseInt(c.Query("Session"), 10, 64)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Bad req",
 		})
 	}
-	database.DB.First(&input, id) // ambil data pertamma yang match
-	return c.JSON(input)
+	var interactions []model.InputUser
+
+	database.DB.Where("Session = ?", session).Find(&interactions)
+	println("yey")
+	return c.JSON(interactions)
 }
 
 func Create(c *fiber.Ctx) error {
@@ -60,9 +56,6 @@ func Create(c *fiber.Ctx) error {
 	for i := 0; i < len(ansArray); i++ {
 		println(ansArray[i])
 	}
-	println("cek")
-
-	// database.DB.Find(&qnas)
 	for i := 0; i < len(ansArray); i++ {
 		_, err := strconv.ParseFloat(ansArray[i], 64)
 		if err == nil || ansArray[i] == "Sintaks persamaan tidak valid!" {
@@ -77,9 +70,6 @@ func Create(c *fiber.Ctx) error {
 			newQnA.Question = matches[1]
 			newQnA.Answer = matches[2]
 			jsonStr, err := json.Marshal(newQnA)
-			if err != nil {
-				// return err
-			}
 			req, err := http.NewRequest("POST", "http://localhost:8000/api/qna", bytes.NewBuffer((jsonStr)))
 			if err != nil {
 				return err

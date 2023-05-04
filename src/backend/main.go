@@ -46,7 +46,7 @@ func main() {
 	// qna.Put("/:id", qnaController.Update)
 	history.Delete("/:id", historyController.Delete)
 	input.Get("/", inputcontroller.Index)
-	input.Get("/:id", inputcontroller.Show)
+	input.Get("/toShow", inputcontroller.Show)
 	input.Post("/", inputcontroller.Create)
 	// qna.Put("/:id", qnaController.Update)
 	input.Delete("/:id", inputcontroller.Delete)

@@ -37,6 +37,34 @@ class MainGPT extends React.Component {
       this.setState({startSession: event.target.value})
   
     }
+    handleHistory = async(event) => {
+      console.log("code history yang ditekan: " + event.target.value)
+
+      await axios.get(`http://localhost:8000/api/input/toShow?Session=${event.target.value}`)
+      .then(response => {
+        // let temp = this.state.qaBlocks
+        // temp.push(this.render_q_block(this.myQuestion.current.value,response.data.Answer))
+        // this.setState({qaBlocks: temp})
+        // this.setState({answer : response.data.Answer})
+        // let temp1 = response.data
+        
+        console.log(response.data)
+        let temp = this.state.qaBlocks
+        for(let i = 0; i < response.data.length; i++){
+          console.log(response.data[i].InputText)
+          console.log(response.data[i].Answer)
+          temp.push(this.render_q_block(response.data[i].InputText,response.data[i].Answer))
+        }
+        
+        this.setState({qaBlocks: temp})
+ 
+        }
+      )
+      .catch(error =>{
+        console.log(error);
+      })
+      
+    }
     handleSubmit = async (event) => {
       event.preventDefault()
       console.log(this.myQuestion.current.value)
@@ -111,7 +139,7 @@ class MainGPT extends React.Component {
       return (
         <div className={styles.main}>
         <div style={styles.first}>
-          <SideBar style={{ margin: '0 10px' }} handleAlgoChange= {this.handleAlgoChange} handleNewSession= {this.handleNewSession}/>
+          <SideBar style={{ margin: '0 10px' }} handleAlgoChange= {this.handleAlgoChange} handleNewSession= {this.handleNewSession} handleHistory = {this.handleHistory}/>
           <div className={styles.chatbox}>
             {this.state.qaBlocks}
           </div>
