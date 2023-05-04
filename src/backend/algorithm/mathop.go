@@ -8,7 +8,7 @@ import (
 )
 
 func calculateMathOperation(input string) string {
-	matharray := regexp.MustCompile(`(\-?\d+|\(|\)|\^|\*|/|\+|-)`)
+	matharray := regexp.MustCompile(`(\-?\d+(\.\d+)?|\(|\)|\^|\*|/|\+|-)`)
 	matcharray := matharray.FindAllStringSubmatch(input, -1)
 
 	buffer := make([]string, len(matcharray))
