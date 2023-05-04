@@ -163,7 +163,7 @@ func CheckQuestion(input string, ansArray []string) []string {
 			ans = "Sintaks persamaan tidak valid!"
 			ansArray = append(ansArray, ans)
 		}
-		pattern := `\(*\s*\(*\s*(-?\d+(?:\.\d+)?)\s*([\^\-+*\/])\s*([\^\-+*\/])?\(*\s*(-?\d+(?:\.\d+)?)\s*\)*\s*(\s*([\^\-+*\/])\s*([\^\-+*\/])?\s*\(*\s*(-?\d+(?:\.\d+)?)){0,}\s*\)*\?*\=*\s*\n*`
+		pattern := `\(*\s*\(*\s*(-?\d+(?:\.\d+)?)\s*([\^\-+*\/])\s*([\^\-+*\/])?\(*\s*(-?\d+(?:\.\d+)?)\s*\)*\s*(\s*([\^\-+*\/])\s*([\^\-\+*\/])?\s*\(*\s*(-?\d+(?:\.\d+)?)\)*){0,}\s*\)*\?*\=*\s*\n*`
 		re := regexp.MustCompile(pattern)
 		matches := re.FindStringSubmatch(input)
 		input = strings.Replace(input, matches[0], "", 1)
