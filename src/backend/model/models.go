@@ -18,3 +18,9 @@ type Sessions struct {
 	Id      uint  `json:"Id"`
 	Session int64 `json:"Session"`
 }
+
+type Request struct {
+	Question  string
+	Answer    string
+	Algorithm bool
+}

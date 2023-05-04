@@ -33,7 +33,7 @@ func main() {
 
 	qna.Get("/", qnaController.Index)
 	qna.Post("/", qnaController.Create)
-	// qna.Put("/:id", qnaController.Update)
+	qna.Put("/", qnaController.Update)
 	qna.Delete("/", qnaController.Delete)
 
 	input.Get("/", inputcontroller.Index)
