@@ -3,6 +3,7 @@ package inputcontroller
 import (
 	"bytes"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"regexp"
 	"sort"
@@ -13,7 +14,6 @@ import (
 	"github.com/jejejery/src/backend/algorithm"
 	database "github.com/jejejery/src/backend/db"
 	"github.com/jejejery/src/backend/model"
-	"gorm.io/gorm"
 )
 
 func Index(c *fiber.Ctx) error {
@@ -24,20 +24,16 @@ func Index(c *fiber.Ctx) error {
 
 func Show(c *fiber.Ctx) error {
 
-	id := c.Params("id")
-	var input model.InputUser
-	if err := database.DB.First(&input, id).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return c.Status(http.StatusNotFound).JSON(fiber.Map{
-				"message": "Data is not found!",
-			})
-		}
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Data is not found!",
+	session, err := strconv.ParseInt(c.Query("Session"), 10, 64)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Bad request!!",
 		})
 	}
-	database.DB.First(&input, id) // ambil data pertamma yang match
-	return c.JSON(input)
+	var interactions []model.InputUser
+
+	database.DB.Where("Session = ?", session).Find(&interactions)
+	return c.JSON(interactions)
 }
 
 func Create(c *fiber.Ctx) error {
@@ -60,9 +56,6 @@ func Create(c *fiber.Ctx) error {
 	for i := 0; i < len(ansArray); i++ {
 		println(ansArray[i])
 	}
-	println("cek")
-
-	// database.DB.Find(&qnas)
 	for i := 0; i < len(ansArray); i++ {
 		_, err := strconv.ParseFloat(ansArray[i], 64)
 		if err == nil || ansArray[i] == "Sintaks persamaan tidak valid!" {
@@ -77,9 +70,6 @@ func Create(c *fiber.Ctx) error {
 			newQnA.Question = matches[1]
 			newQnA.Answer = matches[2]
 			jsonStr, err := json.Marshal(newQnA)
-			if err != nil {
-				// return err
-			}
 			req, err := http.NewRequest("POST", "http://localhost:8000/api/qna", bytes.NewBuffer((jsonStr)))
 			if err != nil {
 				return err
@@ -91,6 +81,8 @@ func Create(c *fiber.Ctx) error {
 				return err
 			}
 			defer resp.Body.Close()
+			bodyBytes, err := ioutil.ReadAll(resp.Body)
+			answer += string(bodyBytes)
 
 			// var qna
 		} else if algorithm.IsErasingQuestion((ansArray[i])) {
@@ -115,6 +107,8 @@ func Create(c *fiber.Ctx) error {
 				return err
 			}
 			defer resp.Body.Close()
+			bodyBytes, err := ioutil.ReadAll(resp.Body)
+			answer += string(bodyBytes)
 
 		} else {
 			isMatch := false
@@ -202,19 +196,4 @@ func Create(c *fiber.Ctx) error {
 		})
 	}
 	return c.JSON(newInput)
-}
-
-func Delete(c *fiber.Ctx) error {
-	id := c.Params("question")
-
-	var input model.InputUser
-	if database.DB.Delete(&input, id).RowsAffected == 0 {
-		println("masuk ke sini dia ges")
-		return c.Status(http.StatusNotFound).JSON(fiber.Map{
-			"message": "Can not delete the data",
-		})
-	}
-	return c.JSON(fiber.Map{
-		"message": "Data is successfully deleted!",
-	})
 }

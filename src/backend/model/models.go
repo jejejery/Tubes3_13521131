@@ -6,16 +6,15 @@ type QnA struct {
 	Answer   string `gorm:"type: LONGTEXT" json:"Answer"`
 }
 
-type History struct {
-	Id     uint   `gorm:"primaryKey" json:"Id"`
-	Urutan uint   `gorm:"primaryKey" json:"Urutan"`
-	Text   string `gorm:"type:LONGTEXT" json:"Text"`
-}
-
 type InputUser struct {
 	Id        uint   `json:"Id"`
-	Session   int64  `json:"Session"`
+	Session   int64  `json:"Session" gorm:"foreignKey:Sessions"`
 	InputText string `json:"InputText"`
 	Algorithm bool   `json:"Algorithm"` //true : kmp, false : bm
 	Answer    string `json:"Answer"`
+}
+
+type Sessions struct {
+	Id      uint  `json:"Id"`
+	Session int64 `json:"Session"`
 }
