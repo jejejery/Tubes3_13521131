@@ -11,8 +11,6 @@ Chat-GPT "Chatty Loli"
 - Front-end : NodeJS v18.15.0 dan NPM v9.6.4 
 - Back-end : Go Version 1.2.3
 
-
-# ![Logo](./src/Resources/logo.svg)
 This task is done to fulfill Strategy and Algorythm IF2211
 
 # Table of Contents
@@ -25,8 +23,6 @@ This task is done to fulfill Strategy and Algorythm IF2211
 # Description
 This is a chatbot web based application that process and answer chat automatically. This chatbot can handle message such like math operation, date (tell the bot calculate the day), adding question to database or updating the answer if the question is already in database, erasing question, and answering random question being input by the user.
 
-
-
 # Dependencies
 Make sure you have this
 ```
@@ -35,6 +31,8 @@ Make sure you have this
 ```
 
 # How To Run
+Click this link to run our Chatty Loli bot!
+[Chatty Loli](https://tubes3-if-2211-yx64.vercel.app/) 
 
 
 # Folder Structure
@@ -69,10 +67,6 @@ Make sure you have this
     └── frontend
           ├── public
           └── src
-                ├── .env
-                ├── go.mod
-                ├── go.sum
-                └── main.go
           ├── package-lock.json
           ├── package.json
           └── README.md
