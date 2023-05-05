@@ -54,14 +54,13 @@ func Create(c *fiber.Ctx) error {
 	var ansArray []string // temp answer from checkQuestion
 	ansArray = algorithm.CheckQuestion(input.Input, ansArray)
 	for i := 0; i < len(ansArray); i++ {
-		println(ansArray[i])
-	}
-	for i := 0; i < len(ansArray); i++ {
 		_, err := strconv.ParseFloat(ansArray[i], 64)
-		if err == nil || ansArray[i] == "Sintaks persamaan tidak valid!" {
-			answer += ansArray[i]
+		if err == nil || ansArray[i] == "Sintaks persamaan tidak valid!" || ansArray[i] == "Pembagian dengan 0 tidak terdefinisi" { 
+			answer += ansArray[i] + "\n"
+		} else if err == nil || ansArray[i] == "Masukan tanggal tidak valid!" {
+			answer += ansArray[i] + "\n"		
 		} else if algorithm.IsDayOutput(ansArray[i]) {
-			answer += ansArray[i]
+			answer += ansArray[i] + "\n"
 		} else if algorithm.IsAddingQNAToDatabase(ansArray[i]) {
 			var newQnA model.QnA
 			pattern := `(?i)Tambahkan pertanyaan (.+) dengan jawaban (.+)`

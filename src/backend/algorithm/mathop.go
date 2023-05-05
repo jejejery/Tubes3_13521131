@@ -5,21 +5,44 @@ import (
 	"strconv"
 	"math"
 	"strings"
+	"fmt"
 )
 
-func calculateMathOperation(input string) string {
-	matharray := regexp.MustCompile(`(\d+|\(|\)|\^|\*|/|\+|-)`)
-	matcharray := matharray.FindAllStringSubmatch(input, -1)
+func isOperator(input string) bool {
+	return input == "+" || input == "-" || input == "*" || input == "/" || input == "^"
+}
 
-	buffer := make([]string, len(matcharray))
+func calculateMathOperation(input string) string {
+	matharray := regexp.MustCompile(`(\-?\d+(\.\d+)?|\(|\)|\^|\*|/|\+|\-)`)
+	// matharray := regexp.MustCompile(`(\-|\-?\d+(\.\d+)?|\(|\)|\^|\*|/|\+)`)
+	// matharray := regexp.MustCompile()
+	matcharray := matharray.FindAllStringSubmatch(input, -1)
+	fmt.Println(matcharray)
+	// buffer := make([]string, 100)
+	var buffer []string
 	counter := 0
+
 	for _, match := range matcharray {
-		if match[1] != " " {
-			buffer[counter] = match[1]
+		num, err := strconv.ParseFloat(match[1], 64)
+		if  err == nil { // kalo operand
+			if  num < 0 {
+					if counter >= 1 && !isOperator(buffer[counter - 1]) {
+						buffer = append(buffer, "-")
+						buffer = append(buffer, strconv.FormatFloat(-1*num, 'f', 2, 64))
+						counter += 2
+					} else {
+						buffer = append(buffer, strconv.FormatFloat(num, 'f', 2, 64))
+						counter++
+					}
+			} else {
+				buffer = append(buffer, strconv.FormatFloat(num, 'f', 2, 64))
+				counter++
+			}
+		} else {
+			buffer = append(buffer, match[1])
 			counter++
 		}
 	}
-
 	var result float64
 
 	for i := 0; i < len(buffer); i++ {
@@ -124,7 +147,10 @@ func calculateMathOperation(input string) string {
 			e := strconv.FormatFloat(result, 'f', 2, 64)
 			buffer = insertElement(buffer, e, 0)
 		} else if operator == "/" {
-			result = operand1 * operand2
+			result = operand1 / operand2
+			if operand2 == 0 {
+				return "Pembagian dengan 0 tidak terdefinisi"
+			}
 			buffer = removeElement(buffer, 0)
 			buffer = removeElement(buffer, 0)
 			buffer = removeElement(buffer, 0)
@@ -133,6 +159,7 @@ func calculateMathOperation(input string) string {
 		} else if operator == "+"  || operator == "-" {
 			i += 2
 		}
+
 		
 		// check for additional operation
 		for i < len(buffer) - 2 {
@@ -147,6 +174,9 @@ func calculateMathOperation(input string) string {
 				e := strconv.FormatFloat(result, 'f', 2, 64)
 				buffer = insertElement(buffer, e, i)
 			} else if op == "/" {
+				if operand4 == 0 {
+					return "Pembagian dengan 0 tidak terdefinisi"
+				}
 				result = operand3 / operand4
 				buffer = removeElement(buffer, i) 
 				buffer = removeElement(buffer, i)
@@ -161,6 +191,7 @@ func calculateMathOperation(input string) string {
 			
 		}
 	}
+
 
 	if (len(buffer) < 3) {
 		return buffer[0]

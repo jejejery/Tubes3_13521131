@@ -105,7 +105,7 @@ class SideBar extends React.Component {
     render_history() {
       let historyItems = [];
       for (let i = 0; i < this.state.history.length; i++) {
-        let historyCode = "History " + ('0' + this.state.history[i]).slice(-2); // format nomor menjadi H01, H02, dst.
+        let historyCode = "History " + ('0' + this.state.history[i]); // format nomor menjadi H01, H02, dst.
 
         historyItems.push(<li color='purple' id = {this.state.history[i]}  onClick={() => this.chooseHistory(this.state.history[i])}>{historyCode}</li>);
       }
