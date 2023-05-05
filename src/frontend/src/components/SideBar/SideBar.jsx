@@ -51,7 +51,6 @@ class SideBar extends React.Component {
           let count = 0;
           while(n>=0 && count < 9){
               count++;
-              console.log(temp[n])
               temp.push(response.data[n].Session)
               n--;
           }
@@ -67,7 +66,6 @@ class SideBar extends React.Component {
       e.preventDefault()
       let temp = this.state.history
       let now = Date.now()
-      console.log(now)
       const data = {
         Session : now
       }

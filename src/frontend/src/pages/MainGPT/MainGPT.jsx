@@ -6,7 +6,7 @@ import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import { SpeechBubble} from 'react-kawaii';
-// import { Route } from 'react-router';
+
 
 
 
@@ -55,9 +55,6 @@ class MainGPT extends React.Component {
     }
     handleSubmit = async (event) => {
       event.preventDefault()
-      console.log(this.myQuestion.current.value)
-      console.log(this.state.algo)
-      console.log(this.state.startSession)
 
       const data = {
         Session: this.state.startSession,
@@ -77,17 +74,6 @@ class MainGPT extends React.Component {
       .catch(error =>{
         console.log(error);
       })
-
-      //insert into array
-
-      
-      
-      //try-catch
-      
-      
-
-        
-      //reset the question
       this.myQuestion.current.value = ""
     }
     handleKeyPress(event) {
