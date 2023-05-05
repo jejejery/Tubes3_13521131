@@ -1,4 +1,5 @@
 # Tubes_3_IF2211
+
 Chat-GPT "Chatty Loli"
 
 <p align="center">
@@ -9,6 +10,76 @@ Chat-GPT "Chatty Loli"
 
 - Front-end : NodeJS v18.15.0 dan NPM v9.6.4 
 - Back-end : Go Version 1.2.3
+
+
+# ![Logo](./src/Resources/logo.svg)
+This task is done to fulfill Strategy and Algorythm IF2211
+
+# Table of Contents
+* [Description](#markdown-header-description)
+* [Dependencies](#markdown-header-dependencies)
+* [How to Run](#markdown-header-how-to-run)
+* [Folder Structure](#markdown-header-folder-structure)
+* [Author](#markdown-header-author)
+
+# Description
+This is a chatbot web based application that process and answer chat automatically. This chatbot can handle message such like math operation, date (tell the bot calculate the day), adding question to database or updating the answer if the question is already in database, erasing question, and answering random question being input by the user.
+
+
+
+# Dependencies
+Make sure you have this
+```
+1. Visual Studio
+2. .NET SDK `ver 6.0.0` or above
+```
+
+# How To Run
+
+
+# Folder Structure
+```bash                             
+├── doc
+    └── Laporan.pdf
+├── src
+    ├── backend
+          └── algorithm
+                ├── bm.go
+                ├── date.go
+                ├── kmp.go
+                ├── levenshtein.go
+                ├── mathop.go
+                └── regex.go
+          └── controller
+                └── inputController
+                      └── inputController.go
+                └── qnaController
+                      └── qnaController.go
+                └── sessionController
+                      └── sessionController.go
+          └── db
+                ├── chatty_loli.sql
+                └── connect.go
+          └── model
+                └── models.go
+          ├── .env
+          ├── go.mod
+          ├── go.sum
+          └── main.go
+    └── frontend
+          ├── public
+          └── src
+                ├── .env
+                ├── go.mod
+                ├── go.sum
+                └── main.go
+          ├── package-lock.json
+          ├── package.json
+          └── README.md
+
+└── README.md
+```
+
 
 ## Author
 | NO | NAMA | NIM |

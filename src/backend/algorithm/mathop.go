@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"math"
 	"strings"
-	"fmt"
 )
 
 func isOperator(input string) bool {
@@ -14,11 +13,7 @@ func isOperator(input string) bool {
 
 func calculateMathOperation(input string) string {
 	matharray := regexp.MustCompile(`(\-?\d+(\.\d+)?|\(|\)|\^|\*|/|\+|\-)`)
-	// matharray := regexp.MustCompile(`(\-|\-?\d+(\.\d+)?|\(|\)|\^|\*|/|\+)`)
-	// matharray := regexp.MustCompile()
 	matcharray := matharray.FindAllStringSubmatch(input, -1)
-	fmt.Println(matcharray)
-	// buffer := make([]string, 100)
 	var buffer []string
 	counter := 0
 
