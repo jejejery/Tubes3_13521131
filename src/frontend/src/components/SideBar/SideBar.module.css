@@ -6,7 +6,8 @@
     line-height: 40px;
     width: 200px;
     height: 450px;
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: scroll;
     padding: 5px 5px;
   }
 
