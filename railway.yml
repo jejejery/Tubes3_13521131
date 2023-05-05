@@ -1,0 +1,11 @@
+version: "1.0"
+name: my-app
+deployment:
+  production:
+    image: "railwayapp/golang:latest"
+    command: "./backend"
+    envs:
+      - PORT=8080
+    build:
+      context: "./src/backend"
+      dockerfile: "./Dockerfile"
