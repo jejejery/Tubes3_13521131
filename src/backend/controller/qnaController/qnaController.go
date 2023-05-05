@@ -67,7 +67,7 @@ func Create(c *fiber.Ctx) error {
 		if err != nil {
 			return err
 		}
-		req, err := http.NewRequest("PUT", "http://localhost:8000/api/qna", bytes.NewBuffer((jsonStr)))
+		req, err := http.NewRequest("PUT", "/api/qna", bytes.NewBuffer((jsonStr)))
 		req.Header.Set("Content-Type", "application/json")
 
 		client := &http.Client{}
