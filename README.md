@@ -86,4 +86,4 @@ Make sure you have this
 --- | --- | --- |
 | 1 | Jeremya Dharmawan Raharjo | 13521131 |
 | 2 | Brigita Tri Carolina | 13521156 |
-| 3 | Kandida Edgina Gunawan | 13521157 |
+| 3 | Kandida Edgina Gunawan | 13521155 |
