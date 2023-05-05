@@ -3,10 +3,9 @@ name: my-app
 deployment:
   production:
     image: "railwayapp/golang:latest"
-    command: "go run main.go"
+    command: "./backend"
     envs:
       - PORT=8080
     build:
-      context: "."
+      context: "./src/backend"
       dockerfile: "./Dockerfile"
-      preBuild: "apt-get update && apt-get install -y golang"
