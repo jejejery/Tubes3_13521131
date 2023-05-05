@@ -11,7 +11,7 @@ Chat-GPT "Chatty Loli"
 - Front-end : NodeJS v18.15.0 dan NPM v9.6.4 
 - Back-end : Go Version 1.2.3
 
-This task is done to fulfill Strategy and Algorythm IF2211
+This task is done to fulfill Algorithm Strategy IF2211
 
 # Table of Contents
 * [Description](#markdown-header-description)
@@ -38,7 +38,7 @@ Click this link to run our Chatty Loli bot!
 # Folder Structure
 ```bash                             
 ├── doc
-    └── Laporan.pdf
+    └── chatty-loli.pdf
 ├── src
     ├── backend
           └── algorithm
