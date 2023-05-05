@@ -1,0 +1,7 @@
+version: "1.0"
+frontend: false
+build:
+  backend:
+    name: Go
+    path: src/backend
+    command: go run main.go
