@@ -1,0 +1,12 @@
+version: "1.0"
+name: my-app
+deployment:
+  production:
+    image: "railwayapp/golang:latest"
+    command: "go run main.go"
+    envs:
+      - PORT=8080
+    build:
+      context: "."
+      dockerfile: "./Dockerfile"
+      preBuild: "apt-get update && apt-get install -y golang"
