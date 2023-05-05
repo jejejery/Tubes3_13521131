@@ -56,7 +56,7 @@ class About extends Component {
             <span style={{ marginRight: '10px' }}></span>
             <div style={{ display: 'inline-block' }}>
               {this.superblock(
-                '13521156',
+                '13521157',
                 'Brigita Tri Carolina',
                 gita
               )}
