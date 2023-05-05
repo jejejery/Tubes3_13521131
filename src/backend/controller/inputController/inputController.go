@@ -102,7 +102,7 @@ func Create(c *fiber.Ctx) error {
 			if err != nil {
 				return err
 			}
-			req, err := http.NewRequest("DELETE", "http://localhost:8000/api/qna", bytes.NewBuffer((jsonStr)))
+			req, err := http.NewRequest("DELETE", "/api/qna", bytes.NewBuffer((jsonStr)))
 			if err != nil {
 				return err
 			}

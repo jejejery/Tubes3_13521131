@@ -23,9 +23,8 @@ func main() {
 	port := os.Getenv("PORT")
 	app := fiber.New()
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://localhost:3000",
+		AllowOrigins: "https://tubes3-if-2211-yx64.vercel.app",
 	}))
-
 	api := app.Group("/api")
 	qna := api.Group("/qna")
 	input := api.Group("/input")
