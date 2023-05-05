@@ -55,10 +55,10 @@ func Create(c *fiber.Ctx) error {
 	ansArray = algorithm.CheckQuestion(input.Input, ansArray)
 	for i := 0; i < len(ansArray); i++ {
 		_, err := strconv.ParseFloat(ansArray[i], 64)
-		if err == nil || ansArray[i] == "Sintaks persamaan tidak valid!" || ansArray[i] == "Pembagian dengan 0 tidak terdefinisi" { 
+		if err == nil || ansArray[i] == "Sintaks persamaan tidak valid!" || ansArray[i] == "Pembagian dengan 0 tidak terdefinisi" {
 			answer += ansArray[i] + "\n"
 		} else if err == nil || ansArray[i] == "Masukan tanggal tidak valid!" {
-			answer += ansArray[i] + "\n"		
+			answer += ansArray[i] + "\n"
 		} else if algorithm.IsDayOutput(ansArray[i]) {
 			answer += ansArray[i] + "\n"
 		} else if algorithm.IsAddingQNAToDatabase(ansArray[i]) {
@@ -69,7 +69,7 @@ func Create(c *fiber.Ctx) error {
 			newQnA.Question = matches[1]
 			newQnA.Answer = matches[2]
 			jsonStr, err := json.Marshal(newQnA)
-			req, err := http.NewRequest("POST", "http://localhost:8000/api/qna", bytes.NewBuffer((jsonStr)))
+			req, err := http.NewRequest("POST", "https://tubes3if2211-production.up.railway.app/api/qna", bytes.NewBuffer((jsonStr)))
 			if err != nil {
 				return err
 			}
@@ -101,7 +101,7 @@ func Create(c *fiber.Ctx) error {
 			if err != nil {
 				return err
 			}
-			req, err := http.NewRequest("DELETE", "/api/qna", bytes.NewBuffer((jsonStr)))
+			req, err := http.NewRequest("DELETE", "https://tubes3if2211-production.up.railway.app/api/qna", bytes.NewBuffer((jsonStr)))
 			if err != nil {
 				return err
 			}

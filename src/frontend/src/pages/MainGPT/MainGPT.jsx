@@ -38,7 +38,7 @@ class MainGPT extends React.Component {
   
     }
     handleHistory = async(event) => {
-      await axios.get(`http://localhost:8000/api/input/toShow?Session=${event.target.value}`)
+      await axios.get(`https://tubes3if2211-production.up.railway.app/api/input/toShow?Session=${event.target.value}`)
       .then(response => {
         console.log(response.data)
         let temp = []
@@ -65,7 +65,7 @@ class MainGPT extends React.Component {
         Algorithm: this.state.algo
         
       };
-      await axios.post("http://localhost:8000/api/input", data)
+      await axios.post("https://tubes3if2211-production.up.railway.app/api/input", data)
       .then(response => {
         let temp = this.state.qaBlocks
         temp.push(this.render_q_block(this.myQuestion.current.value,response.data.Answer))

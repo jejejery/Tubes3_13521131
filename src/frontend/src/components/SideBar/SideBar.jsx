@@ -44,7 +44,7 @@ class SideBar extends React.Component {
       else this.props.handleAlgoChange({target: {value: this.state.isKMP}});
     }
     componentDidMount(){
-      axios.get("http://localhost:8000/api/session")
+      axios.get("https://tubes3if2211-production.up.railway.app/api/session")
         .then(response =>{
           const temp = [];
           let n = response.data.length-1;
@@ -71,7 +71,7 @@ class SideBar extends React.Component {
       const data = {
         Session : now
       }
-      await axios.post("http://localhost:8000/api/session", data)
+      await axios.post("https://tubes3if2211-production.up.railway.app/api/session", data)
       
       if(temp.length < 10){
         temp.push(now)
